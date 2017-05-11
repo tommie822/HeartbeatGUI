@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Data;
+import Model.DataDaoImpl;
 import Model.HeartRate;
 import Model.Patient;
 import javafx.application.Platform;
@@ -31,14 +32,10 @@ import java.util.*;
 
 public class HomePageController {
     @FXML
-    BorderPane borderPane;
+    private ListView<String> listViewNames;
     @FXML
-    ToggleButton realTimeButton;
-    @FXML
-    ListView<String> listViewNames;
-    @FXML
-    LineChart<String, Integer> heartRateLineChart;
-
+    private LineChart<String, Integer> heartRateLineChart;
+    private DataDaoImpl dataDao = new DataDaoImpl();
     /**Opens the extra Editor window*/
     public void editor() {
         try {
@@ -71,32 +68,31 @@ public class HomePageController {
         listViewNames.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                updateLineChart(newValue);
+                if(newValue != null) {
+                    updateLineChart(newValue);
+                }
             }
         });
     }
 
+    /**Will set the title of the linechart to the selected person
+     * And will import his data into the linechart*/
     private void updateLineChart(String newValue){
         heartRateLineChart.setTitle(newValue);
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
         DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
-        for(int index = 0; index < Data.getInstance().getPatients().size() ; index++){
-            if(Data.getInstance().getPatients().get(index).getName().equals(newValue)){
-                for(HeartRate heartRate : Data.getInstance().getPatients().get(index).getHeartRateList()){
-                    series.getData().add(new XYChart.Data(timeFormat.format(heartRate.getDate()), heartRate.getHeartBeat()));
-            }
-                //realTimeButton.setText(Integer.toString(Data.getInstance().getPatients().get(index).getIdWristband()));
-            }
+        for(HeartRate heartRate : dataDao.getPatientHeartRateList(newValue)) {
+            series.getData().add(new XYChart.Data(timeFormat.format(heartRate.getDate()), heartRate.getHeartBeat()));
         }
         heartRateLineChart.setAxisSortingPolicy(LineChart.SortingPolicy.X_AXIS);
         heartRateLineChart.getData().setAll(series);
     }
 
     /**Updates the listview with the linked names to all the ID's*/
-    public void updatePatientIDListView(){
+    private void updatePatientIDListView(){
         ObservableList<String> patientNamen = FXCollections.observableArrayList();
-        for(int index = 0; index < Data.getInstance().getPatients().size(); index++){
-            patientNamen.add(Data.getInstance().getPatients().get(index).getName());
+        for(int index = 0; index < dataDao.getNumberOfPatients(); index++){
+            patientNamen.add(dataDao.getPatientName(index));
         }
         listViewNames.getItems().setAll(patientNamen);
     }
@@ -107,40 +103,35 @@ public class HomePageController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("importer");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Heartrate files", "*.heartrate"));
         File file = fileChooser.showOpenDialog(stage);
-        try {
-            Data.getInstance().getPatients().clear();
-            Scanner scanner = new Scanner(file);
-            String importData = scanner.nextLine();
-            System.out.println(importData);
-            StringTokenizer stringTokenizer = new StringTokenizer(importData);
-            int devices = Integer.parseInt((String)stringTokenizer.nextElement());
-            for(int index = 0; index < devices; index++) {
-                Data.getInstance().getPatients().add(new Patient(index, Integer.toString(index)));
-            }
-            while(scanner.hasNextLine()){
-                importData = scanner.nextLine();
-                stringTokenizer = new StringTokenizer(importData);
-                int idWristband = Integer.parseInt((String)stringTokenizer.nextElement());
-                DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
-                Date date = null;
-                try {
+        if(file != null) {
+            try {
+                Scanner scanner = new Scanner(file);
+                String importData = scanner.nextLine();
+                StringTokenizer stringTokenizer = new StringTokenizer(importData);
+                int devices = Integer.parseInt((String) stringTokenizer.nextElement());
+                Data.getInstance().getPatients().clear();
+                for (int index = 0; index < devices; index++) {
+                    dataDao.addNewPatient(new Patient(index, Integer.toString(index)));
+                }
+                while (scanner.hasNextLine()) {
+                    importData = scanner.nextLine();
+                    stringTokenizer = new StringTokenizer(importData);
+                    int idWristband = Integer.parseInt((String) stringTokenizer.nextElement());
+                    DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                    Date date = null;
                     date = timeFormat.parse((String) stringTokenizer.nextElement());
-                }catch (ParseException e){
-                    e.printStackTrace();
+                    int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                    dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
                 }
-                int heartbeat = Integer.parseInt((String)stringTokenizer.nextElement());
-                for(int index = 0; index < devices; index++){
-                    if(Data.getInstance().getPatients().get(index).getIdWristband() == idWristband){
-                        Data.getInstance().getPatients().get(index).getHeartRateList().add(new HeartRate(date,heartbeat));
-                        System.out.println(index + "\t"+date +"\t"+ heartbeat);
-                    }
-                }
+            }catch (ParseException e){
+               e.printStackTrace();
+            }catch (IOException e) {
+                e.printStackTrace();
             }
-        }catch (IOException e){
-            e.printStackTrace();
+            updatePatientIDListView();
         }
-        updatePatientIDListView();
     }
 
 }

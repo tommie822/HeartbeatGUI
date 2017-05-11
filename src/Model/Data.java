@@ -21,15 +21,4 @@ public class Data {
     public List<Patient> getPatients() {
         return patients;
     }
-
-    //    private static Map<Integer , String> IDLinker = new HashMap<>(); //hasmap dat de ID numbers van wireless devices linkt aan de namen van de patienten
-//    public Data(int wirelessDevices){
-//        for(int index = 1; index <= wirelessDevices; index++){
-//            IDLinker.put(index, Integer.toString(index));
-//        }
-//    }
-//    public static Map<Integer, String> getIDLinker() {
-//        return IDLinker;
-//    }
-
 }

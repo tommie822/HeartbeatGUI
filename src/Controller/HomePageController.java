@@ -1,6 +1,8 @@
 package Controller;
 
 import Model.Data;
+import Model.HeartRate;
+import Model.Patient;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,6 +19,10 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -51,9 +57,9 @@ public class HomePageController {
         listViewNames.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                for(Map.Entry<Integer, String> entry : Data.getIDLinker().entrySet()){
-                    if(entry.getValue().equals(newValue)){
-                        realTimeButton.setText(Integer.toString(entry.getKey()));
+                for(int index = 0; index < Data.getInstance().getPatients().size() ; index++){
+                    if(Data.getInstance().getPatients().get(index).getName().equals(newValue)){
+                        realTimeButton.setText(Integer.toString(Data.getInstance().getPatients().get(index).getIdWristband()));
                     }
                 }
             }
@@ -63,8 +69,8 @@ public class HomePageController {
     /**Updates the listview with the linked names to all the ID's*/
     public void updatePatientToIDView(){
         ObservableList<String> patientNamen = FXCollections.observableArrayList();
-        for(int index = 1; index <= Data.getIDLinker().size(); index++){
-            patientNamen.add(Data.getIDLinker().get(index));
+        for(int index = 0; index < Data.getInstance().getPatients().size(); index++){
+            patientNamen.add(Data.getInstance().getPatients().get(index).getName());
         }
         listViewNames.getItems().setAll(patientNamen);
     }
@@ -78,10 +84,30 @@ public class HomePageController {
         File file = fileChooser.showOpenDialog(stage);
         try {
             Scanner scanner = new Scanner(file);
-            String data = scanner.nextLine();
-            StringTokenizer stringTokenizer = new StringTokenizer(data);
-            Data data1 = new Data(Integer.parseInt(stringTokenizer.nextToken()));
-            System.out.println(stringTokenizer.nextToken());
+            String importData = scanner.nextLine();
+            StringTokenizer stringTokenizer = new StringTokenizer(importData);
+            int devices = Integer.parseInt((String)stringTokenizer.nextElement());
+            for(int index = 0; index < devices; index++) {
+                Data.getInstance().getPatients().add(new Patient(index, Integer.toString(index)));
+            }
+            while(stringTokenizer.hasMoreElements()){
+                int idWristband = Integer.parseInt((String)stringTokenizer.nextElement());
+                DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                Date date = null;
+                try {
+                    date = timeFormat.parse((String) stringTokenizer.nextElement());
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
+                int heartbeat = Integer.parseInt((String)stringTokenizer.nextElement());
+                for(int index = 0; index < devices; index++){
+                    if(Data.getInstance().getPatients().get(index).getIdWristband() == idWristband){
+                        Data.getInstance().getPatients().get(index).getHeartRateList().add(new HeartRate(date,heartbeat));
+                        System.out.println(index + "\t"+date +"\t"+ heartbeat);
+                    }
+                }
+            }
+            System.out.println(importData);
         }catch (IOException e){
             e.printStackTrace();
         }

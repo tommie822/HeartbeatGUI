@@ -22,22 +22,27 @@ public class EditorController {
      * and adds an listener to the listviewer*/
     public void initialize(){
         ObservableList<String> patientIDs = FXCollections.observableArrayList();
-        for(int index = 1; index <= Data.getIDLinker().size(); index++){
+        for(int index = 0; index < Data.getInstance().getPatients().size(); index++){
             patientIDs.add(Integer.toString(index));
         }
         listViewID.getItems().addAll(patientIDs);
-        listViewID.getSelectionModel().select("1");
-        nameInput.setText(Data.getIDLinker().get(1));
+        listViewID.getSelectionModel().select("0");
+        nameInput.setText(Data.getInstance().getPatients().get(0).getName());
         listViewID.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                nameInput.setText(Data.getIDLinker().get(Integer.parseInt(newValue)));
+                nameInput.setText(Data.getInstance().getPatients().get(Integer.parseInt(newValue)-1).getName());
             }
         });
     }
 
     /**If a name is given for an ID, it gets saved into the IDLinker so that each ID is linked to a name*/
     public void linkID(){
-        Data.getIDLinker().replace(Integer.parseInt(listViewID.getSelectionModel().getSelectedItem()), nameInput.getText());
+        Data data = Data.getInstance();
+        for(int index = 0; index < Data.getInstance().getPatients().size(); index++){
+            if(data.getPatients().get(index).getIdWristband() == Integer.parseInt(listViewID.getSelectionModel().getSelectedItem())){
+                data.getPatients().get(index).setName(nameInput.getText());
+            }
+        }
     }
 }

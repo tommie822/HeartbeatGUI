@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Created by Tom on 19-3-2017.
+ * Stalin was here
  */
 public class Main extends Application{
     public static void main(String[] args){

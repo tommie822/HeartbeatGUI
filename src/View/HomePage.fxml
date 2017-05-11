@@ -6,18 +6,12 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#updatePatientToIDView" prefHeight="576.0" prefWidth="1226.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1226.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageController">
    <children>
       <BorderPane fx:id="borderPane" layoutX="143.0" layoutY="64.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
-                  <MenuButton mnemonicParsing="false" text="File">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
-                    </items>
-                  </MenuButton>
                   <Button mnemonicParsing="false" text="Connect" />
                   <Button mnemonicParsing="false" onAction="#importData" text="Import" />
                   <Button mnemonicParsing="false" onAction="#editor" text="Editor" />
@@ -34,7 +28,7 @@
                         <ToggleButton fx:id="realTimeButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="111.0" text="ToggleButton" />
                      </children>
                   </StackPane>
-                  <LineChart layoutY="57.0" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">
+                  <LineChart fx:id="heartRateLineChart" alternativeRowFillVisible="false" layoutY="57.0" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">
                     <xAxis>
                       <CategoryAxis label="Tijd" prefHeight="21.0" prefWidth="314.0" side="BOTTOM" />
                     </xAxis>

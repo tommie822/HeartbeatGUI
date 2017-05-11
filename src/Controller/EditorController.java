@@ -31,7 +31,7 @@ public class EditorController {
         listViewID.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                nameInput.setText(Data.getInstance().getPatients().get(Integer.parseInt(newValue)-1).getName());
+                nameInput.setText(Data.getInstance().getPatients().get(Integer.parseInt(newValue)).getName());
             }
         });
     }

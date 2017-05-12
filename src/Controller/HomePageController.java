@@ -65,20 +65,18 @@ public class HomePageController {
 
     /**Adds an changelistener to the ListView*/
     public void initialize(){
-        listViewNames.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        listViewNames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(newValue != null) {
-                    updateLineChart(newValue);
-                }
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                updateLineChart(newValue.intValue());
             }
         });
     }
 
     /**Will set the title of the linechart to the selected person
      * And will import his data into the linechart*/
-    private void updateLineChart(String newValue){
-        heartRateLineChart.setTitle(newValue);
+    private void updateLineChart(int newValue){
+        heartRateLineChart.setTitle(dataDao.getPatientName(newValue));
         XYChart.Series<String, Integer> series = new XYChart.Series<>();
         DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
         for(HeartRate heartRate : dataDao.getPatientHeartRateList(newValue)) {

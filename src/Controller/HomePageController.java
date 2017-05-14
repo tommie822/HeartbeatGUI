@@ -16,8 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -34,6 +32,7 @@ public class HomePageController {
     //TODO real-time button needs a text with real-time on and with real-time of. It also needs to be linked with the incoming Connect function
     //TODO The connect button so that it reads all the incoming data and saves it.
     //TODO Make a saving function so that nurses can save data from one specific user or can save the real-time data that has been collected.
+    //TODO Duidelijk structuur aanbrengen aan het programma, en vooral in deze classe waar alle functies door elkaar heen staan.
 
     @FXML
     private ListView<String> listViewNames;
@@ -66,6 +65,19 @@ public class HomePageController {
 
     }
 
+    public void connect(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            Pane connectPane = loader.load(getClass().getResourceAsStream("/View/Connect.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Connect");
+            stage.setScene(new Scene(connectPane, 400, 400));
+            stage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void help(){
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -86,7 +98,6 @@ public class HomePageController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if(newValue.intValue() >= 0) {
-                    System.out.println(newValue);
                     updateLineChart(newValue.intValue());
                 }
             }
@@ -97,7 +108,7 @@ public class HomePageController {
      * And will import his data into the linechart*/
     private void updateLineChart(int newValue){
         heartRateLineChart.setTitle(dataDao.getPatientName(newValue));
-        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
         DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
         for(HeartRate heartRate : dataDao.getPatientHeartRateList(newValue)) {
             series.getData().add(new XYChart.Data(timeFormat.format(heartRate.getDate()), heartRate.getHeartBeat()));

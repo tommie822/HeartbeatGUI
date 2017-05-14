@@ -9,7 +9,7 @@ import java.util.List;
 public class Patient {
     private int idWristband;
     private String name;
-    private List<HeartRate> heartRateList = new ArrayList<>();
+    private List<HeartRate> heartRateList = new ArrayList<HeartRate>();
 
     public Patient(int idWristband, String name){
         this.idWristband = idWristband;

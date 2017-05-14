@@ -31,6 +31,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HomePageController {
+    //TODO real-time button needs a text with real-time on and with real-time of. It also needs to be linked with the incoming Connect function
+    //TODO The connect button so that it reads all the incoming data and saves it.
+    //TODO Make a saving function so that nurses can save data from one specific user or can save the real-time data that has been collected.
+
     @FXML
     private ListView<String> listViewNames;
     @FXML
@@ -62,13 +66,29 @@ public class HomePageController {
 
     }
 
+    public void help(){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            Pane rootPane = loader.load(getClass().getResourceAsStream("/View/Help.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Help");
+            stage.setScene(new Scene(rootPane, 600, 400));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**Adds an changelistener to the ListView*/
     public void initialize(){
         listViewNames.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                updateLineChart(newValue.intValue());
+                if(newValue.intValue() >= 0) {
+                    System.out.println(newValue);
+                    updateLineChart(newValue.intValue());
+                }
             }
         });
     }

@@ -15,7 +15,7 @@
                   <Button mnemonicParsing="false" text="Connect" />
                   <Button mnemonicParsing="false" onAction="#importData" text="Import" />
                   <Button mnemonicParsing="false" onAction="#editor" text="Editor" />
-                  <Button mnemonicParsing="false" text="Help" />
+                  <Button mnemonicParsing="false" onAction="#help" text="Help" />
                </items>
             </ToolBar>
          </top>
@@ -25,7 +25,7 @@
                   <ScrollBar layoutY="457.0" prefHeight="18.0" prefWidth="1093.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <StackPane prefHeight="57.0" prefWidth="1094.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <ToggleButton fx:id="realTimeButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="111.0" text="ToggleButton" />
+                        <ToggleButton fx:id="realTimeButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="111.0" text="Real-time" />
                      </children>
                   </StackPane>
                   <LineChart fx:id="heartRateLineChart" alternativeRowFillVisible="false" layoutY="57.0" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">

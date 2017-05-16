@@ -3,9 +3,9 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ttigg on 11/05/2017.
- */
+/**The patient class its purpose is for data storing, In here you will find the patients ID and
+ * Linked name that is given to him with the editor. There is also a list with all the heartrate data
+ * This list is used by the listchart in the @HomePageController for showing the patients heartbeat.*/
 public class Patient {
     private int idWristband;
     private String name;

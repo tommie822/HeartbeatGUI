@@ -6,8 +6,6 @@ import java.util.List;
  * Created by tom on 11-5-2017.
  */
 public class DataDaoImpl implements DataDao {
-    //TODO make a Dao to acces the data object easily
-
     @Override
     public List<HeartRate> getPatientHeartRateList(int idWristband) {
         for(int i = 0; i < getNumberOfPatients(); i++){

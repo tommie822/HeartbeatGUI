@@ -10,9 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 
 
-/**
- * Created by tom on 14-5-2017.
- */
 public class ConnectController {
     @FXML
     private ListView<String> comListView;

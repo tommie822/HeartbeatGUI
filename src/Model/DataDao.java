@@ -9,6 +9,7 @@ public interface DataDao {
     List<HeartRate> getPatientHeartRateList(int idWristband);
     List<HeartRate> getPatientHeartRateList(String name);
     String getPatientName(int idWristband);
+    int getPatientID(int index);
     int  getNumberOfPatients();
     List getAllPatients();
     void addNewPatient(Patient patient);

@@ -25,8 +25,11 @@ public class EditorController {
     public void initialize(){
         ObservableList<String> patientIDs = FXCollections.observableArrayList();
         if(dataDao.getAllPatients() != null) {
-            for (int index = 0; index < dataDao.getNumberOfPatients(); index++) {
-                patientIDs.add(Integer.toString(index));
+            for(int index = 0; index < 50; index++){
+                patientIDs.add("");
+            }
+            for(int index = 0; index < dataDao.getNumberOfPatients(); index++){
+                patientIDs.set(dataDao.getPatientID(index), dataDao.getPatientName(dataDao.getPatientID(index)));
             }
             listViewID.getItems().addAll(patientIDs);
             listViewID.getSelectionModel().select("0");
@@ -34,7 +37,9 @@ public class EditorController {
             listViewID.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
                 @Override
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    nameInput.setText(Data.getInstance().getPatients().get(Integer.parseInt(newValue)).getName());
+                    if(!newValue.equals("")) {
+                        nameInput.setText(dataDao.getPatientName(Integer.parseInt(newValue)));
+                    }
                 }
             });
         }

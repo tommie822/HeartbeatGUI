@@ -17,6 +17,11 @@ public class DataDaoImpl implements DataDao {
     }
 
     @Override
+    public int getPatientID(int index) {
+        return Data.getInstance().getPatients().get(index).getIdWristband();
+    }
+
+    @Override
     public List<HeartRate> getPatientHeartRateList(String name) {
         for(int i = 0; i < getNumberOfPatients(); i++){
             if(Data.getInstance().getPatients().get(i).getName().equals(name)){
@@ -42,7 +47,7 @@ public class DataDaoImpl implements DataDao {
     }
 
     @Override
-    public List getAllPatients() {
+    public List<Patient> getAllPatients() {
         return Data.getInstance().getPatients();
     }
 

@@ -86,6 +86,17 @@ public class HomePageController {
             stage.setTitle("Connect");
             stage.setScene(new Scene(connectPane, 400, 400));
             stage.show();
+            stage.setOnHiding(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            updatePatientIDListView();
+                        }
+                    });
+                }
+            });
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -116,35 +127,47 @@ public class HomePageController {
         if(file != null) {
             try {
                 Scanner scanner = new Scanner(file);
-                /**Gets the number of devices that are in this file. It clears the last patient list and
-                 * makes a new one with the current number of patients that are being imported*/
-                String importData = scanner.nextLine();
-                StringTokenizer stringTokenizer = new StringTokenizer(importData);
-                int devices = Integer.parseInt((String) stringTokenizer.nextElement());
-                Data.getInstance().getPatients().clear();
-                for (int index = 0; index < devices; index++) {
-                    dataDao.addNewPatient(new Patient(index, Integer.toString(index)));
+                dataDao.clearPatients();
+                while(scanner.hasNext()){
+                    updatePatientData(scanner.nextLine());
                 }
-                /**Will import all the data from the file and will put it in the correct patient*/
-                while (scanner.hasNextLine()) {
-                    importData = scanner.nextLine();
-                    stringTokenizer = new StringTokenizer(importData);
-                    int idWristband = Integer.parseInt((String) stringTokenizer.nextElement());
-                    DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
-                    Date date = null;
-                    date = timeFormat.parse((String) stringTokenizer.nextElement());
-                    int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
-                    dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
-                }
-            }catch (ParseException e){
-               e.printStackTrace();
-            }catch (IOException e) {
+            }catch (IOException e){
                 e.printStackTrace();
             }
             updatePatientIDListView();
         }
     }
 
+    private void updatePatientData(String importData){
+        try {
+            StringTokenizer stringTokenizer;
+            /**Will import all the data from the file and will put it in the correct patient*/
+                boolean hasPatient = false;
+                stringTokenizer = new StringTokenizer(importData);
+                int idWristband = Integer.parseInt((String) stringTokenizer.nextElement());
+                for(Patient patient : dataDao.getAllPatients()){
+                    if(patient.getIdWristband() == idWristband){
+                        DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                        Date date = null;
+                        date = timeFormat.parse((String) stringTokenizer.nextElement());
+                        int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                        dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
+                        hasPatient = true;
+                        break;
+                    }
+                }
+                if(!hasPatient) {
+                    dataDao.addNewPatient(new Patient(idWristband, Integer.toString(idWristband)));
+                    DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                    Date date = null;
+                    date = timeFormat.parse((String) stringTokenizer.nextElement());
+                    int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                    dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
+                }
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
 
     /**Will set the title of the linechart to the selected persons ID
      * And will import his data into the linechart*/
@@ -162,8 +185,11 @@ public class HomePageController {
     /**This function will be called everytime a file gets imported or when the editor view is closed*/
     private void updatePatientIDListView(){
         ObservableList<String> patientNamen = FXCollections.observableArrayList();
+        for(int index = 0; index < 50; index++){
+            patientNamen.add("");
+        }
         for(int index = 0; index < dataDao.getNumberOfPatients(); index++){
-            patientNamen.add(dataDao.getPatientName(index));
+            patientNamen.set(dataDao.getPatientID(index), dataDao.getPatientName(dataDao.getPatientID(index)));
         }
         listViewNames.getItems().setAll(patientNamen);
     }

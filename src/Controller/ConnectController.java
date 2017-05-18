@@ -1,39 +1,96 @@
 package Controller;
 
-import Model.ConnectionHandler;
+import Model.*;
 import com.fazecast.jSerialComm.SerialPort;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.StringTokenizer;
+
 
 public class ConnectController {
     @FXML
     private ListView<String> comListView;
+    private DataDaoImpl dataDao = new DataDaoImpl();
     public void initialize(){
+        System.out.println("thread start");
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         ObservableList<String> list = FXCollections.observableArrayList();
         for(SerialPort serialPort : serialPorts){
             list.add(serialPort.getDescriptivePortName());
         }
         comListView.getItems().setAll(list);
+    }
 
-        comListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                SerialPort[] serialPorts1 = SerialPort.getCommPorts();
-                for(SerialPort serialPort: serialPorts1){
-                    if(serialPort.getDescriptivePortName().equals(newValue)){
-                        //TODO ervoor zorgen dat er maar een thread kan zijn. Anders gaan er twee threads waarde invoeren in de data model wat niet goed is.
-                        Thread connectionhandler = new ConnectionHandler(serialPort);
-                        connectionhandler.setDaemon(false);
-                        connectionhandler.start();
+    public void connect(){
+        System.out.println("thread start");
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    SerialPort[] serialPorts = SerialPort.getCommPorts();
+                    for(SerialPort serialPort : serialPorts){
+                        System.out.println(serialPort.getDescriptivePortName());
+                        if(serialPort.getSystemPortName().equals("COM3")){
+                            System.out.println(serialPort.getSystemPortName());
+                            serialPort.openPort();
+                            serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
+                            while(true) {
+                                String string = "";
+                                try {
+                                    char c = (char) serialPort.getInputStream().read();
+                                    while (c != 0) {
+                                        string = string + (c);
+                                        c = (char) serialPort.getInputStream().read();
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                updatePatientData(string);
+                                System.out.println("String: " + string);
+                            }
+                        }
                     }
                 }
+            });
+            thread.setDaemon(true);
+            thread.start();
+    }
+
+    private void updatePatientData(String importData){
+        try {
+            StringTokenizer stringTokenizer;
+            /**Will import all the data from the file and will put it in the correct patient*/
+            boolean hasPatient = false;
+            stringTokenizer = new StringTokenizer(importData);
+            int idWristband = Integer.parseInt((String) stringTokenizer.nextElement());
+            for(Patient patient : dataDao.getAllPatients()){
+                if(patient.getIdWristband() == idWristband){
+                    DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                    Date date = null;
+                    date = timeFormat.parse((String) stringTokenizer.nextElement());
+                    int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                    dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
+                    hasPatient = true;
+                    break;
+                }
             }
-        });
+            if(!hasPatient) {
+                dataDao.addNewPatient(new Patient(idWristband, Integer.toString(idWristband)));
+                DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                Date date = null;
+                date = timeFormat.parse((String) stringTokenizer.nextElement());
+                int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
+            }
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
     }
 }

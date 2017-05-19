@@ -20,7 +20,6 @@ public class ConnectController {
     private ListView<String> comListView;
     private DataDaoImpl dataDao = new DataDaoImpl();
     public void initialize(){
-        System.out.println("thread start");
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         ObservableList<String> list = FXCollections.observableArrayList();
         for(SerialPort serialPort : serialPorts){
@@ -30,36 +29,37 @@ public class ConnectController {
     }
 
     public void connect(){
-        System.out.println("thread start");
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     SerialPort[] serialPorts = SerialPort.getCommPorts();
                     for(SerialPort serialPort : serialPorts){
                         System.out.println(serialPort.getDescriptivePortName());
-                        if(serialPort.getSystemPortName().equals("COM3")){
+                        if(serialPort.getDescriptivePortName().equals(comListView.getSelectionModel().getSelectedItem())){
                             System.out.println(serialPort.getSystemPortName());
                             serialPort.openPort();
                             serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-                            while(true) {
-                                String string = "";
-                                try {
-                                    char c = (char) serialPort.getInputStream().read();
-                                    while (c != 0) {
-                                        string = string + (c);
-                                        c = (char) serialPort.getInputStream().read();
+                            if(!Data.getInstance().getConnectedPort().equals(serialPort)) {
+                                Data.getInstance().setConnectedPort(serialPort);
+                                while (Data.getInstance().getConnectedPort().equals(serialPort)) {
+                                    String string = "";
+                                    try {
+                                        char c = (char) serialPort.getInputStream().read();
+                                        while (c != 0) {
+                                            string = string + (c);
+                                            c = (char) serialPort.getInputStream().read();
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    updatePatientData(string);
+                                    System.out.println("String: " + string);
                                 }
-                                updatePatientData(string);
-                                System.out.println("String: " + string);
                             }
                         }
                     }
                 }
             });
-            thread.setDaemon(true);
             thread.start();
     }
 

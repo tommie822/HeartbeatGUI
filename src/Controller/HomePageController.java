@@ -1,6 +1,5 @@
 package Controller;
 
-import Model.Data;
 import Model.DataDaoImpl;
 import Model.HeartRate;
 import Model.Patient;
@@ -46,7 +45,7 @@ public class HomePageController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if(newValue.intValue() >= 0) {
-                    updateLineChart(newValue.intValue());
+                    updateLineChart(heartRateLineChart, newValue.intValue());
                 }
             }
         });
@@ -86,17 +85,7 @@ public class HomePageController {
             stage.setTitle("Connect");
             stage.setScene(new Scene(connectPane, 400, 400));
             stage.show();
-            stage.setOnHiding(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            updatePatientIDListView();
-                        }
-                    });
-                }
-            });
+
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -134,7 +123,6 @@ public class HomePageController {
             }catch (IOException e){
                 e.printStackTrace();
             }
-            updatePatientIDListView();
         }
     }
 
@@ -163,23 +151,27 @@ public class HomePageController {
                     date = timeFormat.parse((String) stringTokenizer.nextElement());
                     int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
                     dataDao.addNewPatientHeartRateData(idWristband,new HeartRate(date, heartbeat));
+                    updatePatientIDListView();
                 }
         }catch (ParseException e){
             e.printStackTrace();
         }
+        updateLineChart(heartRateLineChart, listViewNames.getSelectionModel().getSelectedIndex());
     }
 
     /**Will set the title of the linechart to the selected persons ID
      * And will import his data into the linechart*/
-    private void updateLineChart(int newValue){
-        heartRateLineChart.setTitle(dataDao.getPatientName(newValue));
-        XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-        DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
-        for(HeartRate heartRate : dataDao.getPatientHeartRateList(newValue)) {
-            series.getData().add(new XYChart.Data(timeFormat.format(heartRate.getDate()), heartRate.getHeartBeat()));
-        }
-        heartRateLineChart.setAxisSortingPolicy(LineChart.SortingPolicy.X_AXIS);
-        heartRateLineChart.getData().setAll(series);
+    private void updateLineChart(LineChart heartRateLineChart, int newValue){
+            XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
+            DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
+            if(!dataDao.getPatientHeartRateList(newValue).isEmpty()) {
+                heartRateLineChart.setTitle(dataDao.getPatientName(newValue));
+                for (HeartRate heartRate : dataDao.getPatientHeartRateList(newValue)) {
+                    series.getData().add(new XYChart.Data(timeFormat.format(heartRate.getDate()), heartRate.getHeartBeat()));
+                }
+                heartRateLineChart.setAxisSortingPolicy(LineChart.SortingPolicy.X_AXIS);
+                heartRateLineChart.getData().setAll(series);
+            }
     }
 
     /**This function will be called everytime a file gets imported or when the editor view is closed*/

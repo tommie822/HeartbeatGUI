@@ -1,5 +1,7 @@
 package Model;
 
+import com.fazecast.jSerialComm.SerialPort;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
 public class Data {
     private static Data instance = new Data();
     private List<Patient> patients = new ArrayList<Patient>();
+    private SerialPort connectedPort = null;
     private Data(){
 
     }
@@ -18,5 +21,13 @@ public class Data {
 
     public List<Patient> getPatients() {
         return patients;
+    }
+
+    public void setConnectedPort(SerialPort connectedPort) {
+        this.connectedPort = connectedPort;
+    }
+
+    public SerialPort getConnectedPort() {
+        return connectedPort;
     }
 }

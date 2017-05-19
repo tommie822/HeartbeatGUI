@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.chart.*?>
@@ -28,9 +29,9 @@
                         <ToggleButton fx:id="realTimeButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="111.0" text="Real-time" />
                      </children>
                   </StackPane>
-                  <LineChart fx:id="heartRateLineChart" alternativeRowFillVisible="false" layoutY="57.0" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">
+                  <LineChart fx:id="heartRateLineChart" alternativeRowFillVisible="false" layoutY="57.0" legendVisible="false" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">
                     <xAxis>
-                      <CategoryAxis label="Tijd" prefHeight="21.0" prefWidth="314.0" side="BOTTOM" />
+                      <CategoryAxis label="Tijd" prefHeight="51.0" prefWidth="930.0" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis label="Hartslag (BPM)" side="LEFT" />

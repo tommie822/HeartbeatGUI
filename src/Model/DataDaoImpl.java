@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class DataDaoImpl implements DataDao {
                 return Data.getInstance().getPatients().get(i).getHeartRateList();
             }
         }
-        return null;
+        return new ArrayList<HeartRate>();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class EditorController {
     TextField nameInput;
     @FXML
     ListView<String> listViewID;
-    DataDao dataDao = new DataDaoImpl();
+    DataDao dataDao = DataDaoImpl.getInstance();
     /**Initializes the editors listView with the amount of ID devices
      * and adds an listener to the listviewer*/
     public void initialize(){

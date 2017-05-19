@@ -11,10 +11,20 @@ import java.util.List;
 public class Data {
     private static Data instance = new Data();
     private List<Patient> patients = new ArrayList<Patient>();
-    private SerialPort connectedPort = null;
+    private SerialPort connectedPort;
+    private boolean import1 = false;
     private Data(){
 
     }
+
+    public void setImport1(boolean import1) {
+        this.import1 = import1;
+    }
+
+    public boolean isImport1() {
+        return import1;
+    }
+
     public static Data getInstance(){
         return instance;
     }

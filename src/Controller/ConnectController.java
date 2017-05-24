@@ -1,21 +1,27 @@
 package Controller;
 
 import Model.*;
-import Util.Connection;
 import com.fazecast.jSerialComm.SerialPort;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 
 public class ConnectController {
     @FXML
     private ListView<String> comListView;
+    @FXML
+    private Button connect;
     private DataDaoImpl dataDao = DataDaoImpl.getInstance();
     public void initialize(){
         SerialPort[] serialPorts = SerialPort.getCommPorts();
@@ -48,14 +54,14 @@ public class ConnectController {
                                         while (c != '!') {
                                             string = string + (c);
                                             c = (char) serialPort.getInputStream().read();
-                                            System.out.println(c);
                                         }
-                                        System.out.println("Character: "+c);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    Connection.getInstance().addPatientData(string);
-                                    System.out.println("String: " + string);
+                                    if(!Data.getInstance().isImport1()) {
+                                        dataDao.addNewPatientHeartRateData(string);
+                                        System.out.println("String: " + string);
+                                    }
                                 }
                                 serialPort.closePort();
                                 Data.getInstance().setImport1(false);
@@ -66,7 +72,9 @@ public class ConnectController {
                     }
                 }
             });
-            thread.setDaemon(true);
-            thread.start();
+        thread.setDaemon(true);
+        thread.start();
+        Stage stage = (Stage) connect.getScene().getWindow();
+        stage.close();
     }
 }

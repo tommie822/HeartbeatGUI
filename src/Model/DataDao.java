@@ -14,5 +14,5 @@ public interface DataDao {
     List getAllPatients();
     void addNewPatient(Patient patient);
     void clearPatients();
-    void addNewPatientHeartRateData(int idWristband, HeartRate heartRate);
+    void addNewPatientHeartRateData(String data);
 }

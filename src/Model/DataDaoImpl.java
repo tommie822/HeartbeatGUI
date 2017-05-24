@@ -1,12 +1,17 @@
 package Model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by tom on 11-5-2017.
  */
-public class DataDaoImpl implements DataDao {
+public class DataDaoImpl extends  AbstractCrudDao implements DataDao {
     private static final DataDaoImpl instance = new DataDaoImpl();
     private DataDaoImpl(){
 
@@ -63,7 +68,12 @@ public class DataDaoImpl implements DataDao {
 
     @Override
     public void addNewPatient(Patient patient) {
-        Data.getInstance().getPatients().add(patient);
+        newPatient(new CrudAction() {
+            @Override
+            public void doAction() {
+                Data.getInstance().getPatients().add(patient);
+            }
+        });
     }
 
     @Override
@@ -72,7 +82,41 @@ public class DataDaoImpl implements DataDao {
     }
 
     @Override
-    public void addNewPatientHeartRateData(int idWristband, HeartRate heartRate) {
-        getPatientHeartRateList(idWristband).add(heartRate);
+    public void addNewPatientHeartRateData(String data) {
+        newData(new CrudAction() {
+            @Override
+            public void doAction() {
+                try {
+                    StringTokenizer stringTokenizer;
+                    /**Will import all the data from the file and will put it in the correct patient*/
+                    boolean hasPatient = false;
+                    stringTokenizer = new StringTokenizer(data);
+                    int idWristband = Integer.parseInt((String) stringTokenizer.nextElement());
+                    for(Patient patient : getAllPatients()){
+                        if(patient.getIdWristband() == idWristband){
+                            DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                            Date date = null;
+                            date = timeFormat.parse((String) stringTokenizer.nextElement());
+                            int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                            getPatientHeartRateList(idWristband).add(new HeartRate(date, heartbeat));
+                            hasPatient = true;
+                            break;
+                        }
+                    }
+                    if(!hasPatient) {
+                        DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
+                        Date date = null;
+                        date = timeFormat.parse((String) stringTokenizer.nextElement());
+                        int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                        addNewPatient(new Patient(idWristband, Integer.toString(idWristband)));
+                        getPatientHeartRateList(idWristband).add(new HeartRate(date, heartbeat));
+                    }
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }catch (NumberFormatException e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

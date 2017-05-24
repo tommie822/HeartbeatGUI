@@ -3,6 +3,7 @@ import Model.VistaNavigator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -20,10 +21,12 @@ public class Main extends Application{
     /**Sets a new scene into the mainStage and makes it maximized*/
     public void start(Stage mainStage) throws IOException{
         Scene scene = new Scene(loadRootPane(), 1920, 1080);
-
+        scene.getStylesheets().add(getClass().getClassLoader().getResource("Layout.css").toString());
         mainStage.setTitle("Heartbeat");
         mainStage.setScene(scene);
         mainStage.setMaximized(true);
+        mainStage.getIcons().add(new Image(getClass().getResourceAsStream("Logo.jpg")));
+        mainStage.setAlwaysOnTop(false);
         mainStage.show();
     }
 

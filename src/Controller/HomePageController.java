@@ -27,7 +27,10 @@ import java.util.*;
 
 public class HomePageController implements AbstractCrudDao.PatientListener, AbstractCrudDao.UpdateListener{
     //TODO Make a saving function so that nurses can save data from one specific user or can save the real-time data that has been collected.
-    //TODO Duidelijk structuur aanbrengen aan het programma, en vooral in deze classe waar alle functies door elkaar heen staan.
+    //TODO Javadoc code toevoegen
+    //TODO Permanente save lijst voor alle namen gelinkt aan wristbands. Zodat je niet steeds opnieuw hoeft te doen wanneer programma opnieuw aangaat.
+    //TODO Warnings implementeren met geluid en popup.
+
     @FXML
     private ListView<String> listViewNames;
     @FXML
@@ -38,7 +41,8 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
 
     /**Adds on initializing of the homepage.fxml a changelistener to the ListViewNames, which will ensure that nurses are able to
      * select patients out of the view.*/
-    public void initialize(){
+    @FXML
+    private void initialize(){
         dataDao.addUpdateListener(this);
         dataDao.addNewPatientListener(this);
         ObservableList<String> patientNamen = FXCollections.observableArrayList();
@@ -54,10 +58,12 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
                 }
             }
         });
+        updateListView();
     }
 
     /**Opens the extra Editor window*/
-    public void editor() {
+    @FXML
+    private void editor() {
         try {
             FXMLLoader loader = new FXMLLoader();
             Pane rootPane = loader.load(getClass().getResourceAsStream("/View/Editor.fxml"));
@@ -85,7 +91,8 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
 
     }
 
-    public void connect(){
+    @FXML
+    private void connect(){
         try {
             FXMLLoader loader = new FXMLLoader();
             Pane connectPane = loader.load(getClass().getResourceAsStream("/View/Connect.fxml"));
@@ -113,7 +120,8 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
         }
     }
 
-    public void help(){
+    @FXML
+    private void help(){
         try {
             FXMLLoader loader = new FXMLLoader();
             Pane rootPane = loader.load(getClass().getResourceAsStream("/View/Help.fxml"));
@@ -131,7 +139,8 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
 
     /**Opens a new window where people can select a .heartrate file to import into the program.
      * Only 1 file can be loaded. It puts the data from the .heartrate file in the list with patients in the Data class*/
-    public void importData(){
+    @FXML
+    private void importData(){
         Stage stage = new Stage();
         stage.setAlwaysOnTop(true);
         FileChooser fileChooser = new FileChooser();
@@ -153,6 +162,15 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
         }
     }
 
+    @FXML
+    private void realTime(){
+        if(realTimeButton.isSelected()) {
+            realTimeButton.setText("Disable Realtime");
+        }else {
+            showLineChart();
+            realTimeButton.setText("Enable Realtime");
+        }
+    }
 
 
     @FXML

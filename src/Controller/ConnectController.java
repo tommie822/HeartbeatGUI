@@ -16,14 +16,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-
 public class ConnectController {
+    private static boolean connected = false;
     @FXML
     private ListView<String> comListView;
     @FXML
     private Button connect;
     private DataDaoImpl dataDao = DataDaoImpl.getInstance();
     public void initialize(){
+        connected = false;
         SerialPort[] serialPorts = SerialPort.getCommPorts();
         ObservableList<String> list = FXCollections.observableArrayList();
         for(SerialPort serialPort : serialPorts){
@@ -41,13 +42,12 @@ public class ConnectController {
                         System.out.println(serialPort.getDescriptivePortName());
                         if(serialPort.getDescriptivePortName().equals(comListView.getSelectionModel().getSelectedItem())){
                             System.out.println(serialPort.getSystemPortName());
-                            if(Data.getInstance().getConnectedPort() != serialPort) {
                                 serialPort.openPort();
                                 serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
                                 System.out.println("setPort");
-                                Data.getInstance().setConnectedPort(serialPort);
                                 dataDao.clearPatients();
-                                while (Data.getInstance().getConnectedPort() == serialPort && !Data.getInstance().isImport1()) {
+                                connected = true;
+                                while (!Data.getInstance().isImport1() && connected) {
                                     String string = "";
                                     try {
                                         char c = (char) serialPort.getInputStream().read();
@@ -65,9 +65,8 @@ public class ConnectController {
                                 }
                                 serialPort.closePort();
                                 Data.getInstance().setImport1(false);
-                                Data.getInstance().setConnectedPort(null);
+                                System.out.println("Close thread");
                                 break;
-                            }
                         }
                     }
                 }

@@ -24,7 +24,7 @@
                   <ScrollBar layoutY="457.0" prefHeight="18.0" prefWidth="1093.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <StackPane prefHeight="57.0" prefWidth="1094.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <ToggleButton fx:id="realTimeButton" onAction="#showLineChart" mnemonicParsing="false" prefHeight="17.0" prefWidth="111.0" text="Real-time" />
+                        <ToggleButton fx:id="realTimeButton" onAction="#realTime" mnemonicParsing="false" prefHeight="17.0" prefWidth="150.0" text="Enable Realtime" />
                      </children>
                   </StackPane>
                   <LineChart fx:id="heartRateLineChart" alternativeRowFillVisible="false" animated="false" layoutY="57.0" legendVisible="false" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">

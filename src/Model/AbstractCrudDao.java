@@ -28,6 +28,12 @@ public abstract class AbstractCrudDao<T> {
             patientListener.updateListView();
         }
     }
+    protected void updatePatientName(CrudAction crudAction){
+        crudAction.doAction();
+        for(PatientListener patientListener : patientListeners){
+            patientListener.updateListView();
+        }
+    }
 
     public interface CrudAction {
         void doAction();

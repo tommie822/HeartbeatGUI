@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 public class HelpController {
     @FXML
     private WebView helpWebView;
-    //TODO HTML file needs a relative path so that it can be included in the software and not as a given html file.
     public void initialize(){
         WebEngine webEngine = helpWebView.getEngine();
         webEngine.load(getClass().getClassLoader().getResource("helpEditor.html").toString());

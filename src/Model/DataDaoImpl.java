@@ -57,6 +57,20 @@ public class DataDaoImpl extends  AbstractCrudDao implements DataDao {
     }
 
     @Override
+    public void setPatientName(int idWristband, String newName) {
+        updatePatientName(new CrudAction() {
+            @Override
+            public void doAction() {
+                for(int i = 0; i < getNumberOfPatients(); i++){
+                    if(Data.getInstance().getPatients().get(i).getIdWristband() == idWristband){
+                        Data.getInstance().getPatients().get(i).setName(newName);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public int getNumberOfPatients() {
         return Data.getInstance().getPatients().size();
     }

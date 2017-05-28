@@ -11,8 +11,9 @@ public interface DataDao {
     String getPatientName(int idWristband);
     int getPatientID(int index);
     int  getNumberOfPatients();
-    List getAllPatients();
+    List<Patient> getAllPatients();
     void addNewPatient(Patient patient);
     void clearPatients();
     void addNewPatientHeartRateData(String data);
+    void setPatientName(int idWristband, String newName);
 }

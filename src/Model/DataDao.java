@@ -2,9 +2,6 @@ package Model;
 
 import java.util.List;
 
-/**
- * Created by tom on 11-5-2017.
- */
 public interface DataDao {
     List<HeartRate> getPatientHeartRateList(int idWristband);
     List<HeartRate> getPatientHeartRateList(String name);

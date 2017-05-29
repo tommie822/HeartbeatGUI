@@ -25,7 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class HomePageController implements AbstractCrudDao.PatientListener, AbstractCrudDao.UpdateListener{
+public class HomePageController implements AbstractCrudDao.NewPatientListener, AbstractCrudDao.NewDataListener {
     //TODO Make a saving function so that nurses can save data from one specific user or can save the real-time data that has been collected.
     //TODO Javadoc code toevoegen
     //TODO Permanente save lijst voor alle namen gelinkt aan wristbands. Zodat je niet steeds opnieuw hoeft te doen wanneer programma opnieuw aangaat.
@@ -43,7 +43,7 @@ public class HomePageController implements AbstractCrudDao.PatientListener, Abst
      * select patients out of the view.*/
     @FXML
     private void initialize(){
-        dataDao.addUpdateListener(this);
+        dataDao.addNewDataListener(this);
         dataDao.addNewPatientListener(this);
         ObservableList<String> patientNamen = FXCollections.observableArrayList();
         for(int index = 0; index < 50; index++){

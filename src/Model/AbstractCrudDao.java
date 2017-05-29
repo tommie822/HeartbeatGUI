@@ -7,31 +7,35 @@ import java.util.HashSet;
  * Created by tom on 23-5-2017.
  */
 public abstract class AbstractCrudDao<T> {
-    private Collection<UpdateListener> updateListeners = new HashSet<>();
-    private Collection<PatientListener> patientListeners = new HashSet<>();
-    public void addUpdateListener(final UpdateListener listener){
-        updateListeners.add(listener);
-    }
-    public void addNewPatientListener(final PatientListener listener){
-        patientListeners.add(listener);
+    private Collection<NewDataListener> newDataListeners = new HashSet<>();
+    private Collection<NewPatientListener> newPatientListeners = new HashSet<>();
+
+    public void addNewDataListener(final NewDataListener newListener){
+        newDataListeners.add(newListener);
     }
 
-    protected void newData(CrudAction crudAction){
+    public void addNewPatientListener(final NewPatientListener newListener){
+        newPatientListeners.add(newListener);
+    }
+
+    void newData(CrudAction crudAction){
         crudAction.doAction();
-        for(UpdateListener listener : updateListeners){
+        for(NewDataListener listener : newDataListeners){
             listener.updateLineChart();
         }
     }
-    protected void newPatient(CrudAction crudAction){
+
+    void newPatient(CrudAction crudAction){
         crudAction.doAction();
-        for(PatientListener patientListener : patientListeners){
-            patientListener.updateListView();
+        for(NewPatientListener newPatientListener : newPatientListeners){
+            newPatientListener.updateListView();
         }
     }
-    protected void updatePatientName(CrudAction crudAction){
+
+    void updatePatientName(CrudAction crudAction){
         crudAction.doAction();
-        for(PatientListener patientListener : patientListeners){
-            patientListener.updateListView();
+        for(NewPatientListener newPatientListener : newPatientListeners){
+            newPatientListener.updateListView();
         }
     }
 
@@ -39,11 +43,11 @@ public abstract class AbstractCrudDao<T> {
         void doAction();
     }
 
-    public interface UpdateListener {
+    public interface NewDataListener {
         void updateLineChart();
     }
 
-    public interface PatientListener{
+    public interface NewPatientListener {
         void updateListView();
     }
 }

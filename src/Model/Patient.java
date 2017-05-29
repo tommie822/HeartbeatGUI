@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**The patient class its purpose is for data storing, In here you will find the patients ID and
- * Linked name that is given to him with the editor. There is also a list with all the heartrate data
- * This list is used by the listchart in the @HomePageController for showing the patients heartbeat.*/
 class Patient implements Serializable{
     private int idWristband;
     private String name;

@@ -18,6 +18,7 @@ public class Main extends Application{
         setHomePage();
         addStyleToHomePage();
         initializeStage(mainStage);
+        mainStage.show();
     }
 
     private void setHomePage() throws IOException{
@@ -36,7 +37,6 @@ public class Main extends Application{
         mainStage.setMaximized(true);
         mainStage.getIcons().add(new Image(getClass().getResourceAsStream("Logo.png")));
         mainStage.setAlwaysOnTop(false);
-        mainStage.show();
     }
 
     public void stop(){

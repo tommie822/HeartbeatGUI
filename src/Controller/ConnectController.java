@@ -10,13 +10,8 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.StringTokenizer;
 
-public class ConnectController {
+public class ConnectController{
     private static boolean connected = false;
     @FXML
     private ListView<String> comListView;
@@ -33,46 +28,18 @@ public class ConnectController {
         comListView.getItems().setAll(list);
     }
 
+    /**
+     * This function is executed after the connect button is pressed
+     * */
     public void connect(){
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    SerialPort[] serialPorts = SerialPort.getCommPorts();
-                    for(SerialPort serialPort : serialPorts){
-                        System.out.println(serialPort.getDescriptivePortName());
-                        if(serialPort.getDescriptivePortName().equals(comListView.getSelectionModel().getSelectedItem())){
-                            System.out.println(serialPort.getSystemPortName());
-                                serialPort.openPort();
-                                serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-                                System.out.println("setPort");
-                                dataDao.clearPatients();
-                                connected = true;
-                                while (!Data.getInstance().isImport1() && connected) {
-                                    String string = "";
-                                    try {
-                                        char c = (char) serialPort.getInputStream().read();
-                                        while (c != '!') {
-                                            string = string + (c);
-                                            c = (char) serialPort.getInputStream().read();
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    if(!Data.getInstance().isImport1()) {
-                                        dataDao.addNewPatientHeartRateData(string);
-                                        System.out.println("String: " + string);
-                                    }
-                                }
-                                serialPort.closePort();
-                                Data.getInstance().setImport1(false);
-                                System.out.println("Close thread");
-                                break;
-                        }
-                    }
-                }
-            });
-        thread.setDaemon(true);
-        thread.start();
+        String nameOfSerialDevice = comListView.getSelectionModel().getSelectedItem();
+        Thread connectionToSerialDevice = new Thread(new ConnectToSerialDevice(nameOfSerialDevice));
+        connectionToSerialDevice.setDaemon(true);
+        connectionToSerialDevice.start();
+        closeStage();
+    }
+
+    private void closeStage(){
         Stage stage = (Stage) connect.getScene().getWindow();
         stage.close();
     }

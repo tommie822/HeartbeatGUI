@@ -9,17 +9,16 @@ import java.util.List;
 public class Data implements Serializable{
     private static Data instance = null;
     private List<Patient> patients = new ArrayList<Patient>();
-    private boolean import1 = false;
 
     private Data(){    }
 
-    public static Data getInstance(){
+    static Data getInstance(){
         if(instance == null){
             try {
-                String dataFolderPath = getLocalApplicationDataFolderPath();
-                loadSavedDataIntoInstance(dataFolderPath);
+                String ApplicationDataFolderPath = getLocalApplicationDataFolderPath();
+                instance = getSavedDataFrom(ApplicationDataFolderPath);
             }catch (ClassNotFoundException | IOException e){
-                //If there isn't any saved data, an exception will be throwed so then a fress Data object will be made.
+                //If there isn't any saved data, an exception will be throwed so then a fresh Data object will be made.
                 instance = new Data();
                 e.printStackTrace();
             }
@@ -41,12 +40,13 @@ public class Data implements Serializable{
         return workingDirectory+"\\data.txt";
     }
 
-    private static void loadSavedDataIntoInstance(String folderPathForSavedData) throws ClassNotFoundException, IOException{
-        File savedData = new File(folderPathForSavedData);
-        FileInputStream fileInputStream = new FileInputStream(savedData);
+    private static Data getSavedDataFrom(String folderPathForSavedData) throws ClassNotFoundException, IOException{
+        File savedDataFile = new File(folderPathForSavedData);
+        FileInputStream fileInputStream = new FileInputStream(savedDataFile);
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        instance = (Data) objectInputStream.readObject();
+        Data savedData = (Data) objectInputStream.readObject();
         objectInputStream.close();
+        return savedData;
     }
 
     public static void saveStateOfDataInstance(){
@@ -69,13 +69,5 @@ public class Data implements Serializable{
 
     List<Patient> getPatients() {
         return patients;
-    }
-
-    public void setImport1(boolean import1) {
-        this.import1 = import1;
-    }
-
-    public boolean isImport1() {
-        return import1;
     }
 }

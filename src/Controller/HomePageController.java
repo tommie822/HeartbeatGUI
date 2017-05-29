@@ -150,7 +150,6 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener, A
         File file = fileChooser.showOpenDialog(stage);
         if(file != null) {
             try {
-                Data.getInstance().setImport1(true);
                 Scanner scanner = new Scanner(file);
                 dataDao.clearPatients();
                 while(scanner.hasNext()){

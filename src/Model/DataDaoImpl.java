@@ -103,40 +103,51 @@ public class DataDaoImpl extends  AbstractCrudDao implements DataDao {
     @Override
     public void addNewPatientHeartRateData(String data) {
         newData(new CrudAction() {
+            int idWristband;
+            int heartbeat;
+            Date date;
+            boolean hasPatient;
+
             @Override
             public void doAction() {
                 try {
                     StringTokenizer stringTokenizer;
-                    /**Will import all the data from the file and will put it in the correct patient*/
-                    boolean hasPatient = false;
+                    hasPatient = false;
                     stringTokenizer = new StringTokenizer(data);
                     if(stringTokenizer.countTokens() == 3) {
-                        int idWristband = Integer.parseInt((String) stringTokenizer.nextElement());
+                        setIdWristband(stringTokenizer.nextToken());
                         for (Patient patient : getAllPatients()) {
                             if (patient.getIdWristband() == idWristband) {
-                                DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
-                                Date date = null;
-                                date = timeFormat.parse((String) stringTokenizer.nextElement());
-                                int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                                setHeartbeat(stringTokenizer.nextToken());
+                                setDate((String)stringTokenizer.nextElement());
                                 getPatientHeartRateList(idWristband).add(new HeartRate(date, heartbeat));
                                 hasPatient = true;
                                 break;
                             }
                         }
                         if (!hasPatient) {
-                            DateFormat timeFormat = new SimpleDateFormat("MM:dd:HH:mm:ss");
-                            Date date = null;
-                            date = timeFormat.parse((String) stringTokenizer.nextElement());
-                            int heartbeat = Integer.parseInt((String) stringTokenizer.nextElement());
+                            setHeartbeat(stringTokenizer.nextToken());
+                            setDate(stringTokenizer.nextToken());
                             addNewPatient(new Patient(idWristband, Integer.toString(idWristband)));
                             getPatientHeartRateList(idWristband).add(new HeartRate(date, heartbeat));
                         }
                     }
-                }catch (ParseException e){
-                    e.printStackTrace();
-                }catch (NumberFormatException e){
+                }catch (ParseException | NumberFormatException e){
                     e.printStackTrace();
                 }
+            }
+
+            private void setIdWristband(String stringIdWristband){
+                idWristband = Integer.parseInt(stringIdWristband);
+            }
+
+            private void setHeartbeat(String stringHeartbeat){
+                heartbeat = Integer.parseInt(stringHeartbeat);
+            }
+
+            private void setDate(String stringDate)throws ParseException{
+                DateFormat timeFormat = new SimpleDateFormat("MM:dd:yyyy:HH:mm:ss");
+                date =  timeFormat.parse(stringDate);
             }
         });
     }

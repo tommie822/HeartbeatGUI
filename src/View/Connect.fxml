@@ -6,9 +6,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ConnectController">
+<AnchorPane prefHeight="574.0" prefWidth="333.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ConnectController">
    <children>
-      <ListView fx:id="serialDeviceListView" prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0" />
-      <Button fx:id="connect" layoutX="259.0" layoutY="185.0" mnemonicParsing="false" onAction="#connect" text="Connect" AnchorPane.bottomAnchor="184.0" AnchorPane.rightAnchor="66.0" AnchorPane.topAnchor="185.0" />
+      <ListView fx:id="serialDeviceListView" prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Button fx:id="connect" layoutY="393.0" mnemonicParsing="false" onAction="#connect" prefHeight="46.0" prefWidth="200.0" text="Connect" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
 </AnchorPane>

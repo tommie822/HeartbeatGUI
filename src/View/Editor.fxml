@@ -5,9 +5,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditorController">
    <children>
-      <ListView fx:id="listViewID" layoutX="90.0" layoutY="34.0" prefHeight="324.0" prefWidth="200.0" />
-      <TextField fx:id="nameInputField" layoutX="324.0" layoutY="185.0" onAction="#linkID" onKeyReleased="#linkID" />
+      <ListView fx:id="listViewID" prefHeight="349.0" prefWidth="200.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <TextField fx:id="nameInputField" layoutY="348.0" onAction="#linkID" onKeyReleased="#linkID" prefHeight="31.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
 </AnchorPane>

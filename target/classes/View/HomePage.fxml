@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1226.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageController">
+   <children>
+      <BorderPane layoutX="143.0" layoutY="64.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <items>
+                  <Button mnemonicParsing="false" onAction="#connect" text="Connect" />
+                  <Button mnemonicParsing="false" onAction="#importData" text="Import" />
+                  <Button mnemonicParsing="false" onAction="#editor" text="Editor" />
+                  <Button mnemonicParsing="false" onAction="#help" text="Help" />
+               </items>
+            </ToolBar>
+         </top>
+         <center>
+            <AnchorPane>
+               <children>
+                  <ScrollBar layoutY="457.0" prefHeight="18.0" prefWidth="1093.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <StackPane prefHeight="57.0" prefWidth="1094.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <ToggleButton fx:id="realTimeButton" onAction="#realTime" mnemonicParsing="false" prefHeight="17.0" prefWidth="150.0" text="Enable Realtime" />
+                     </children>
+                  </StackPane>
+                  <LineChart fx:id="heartRateLineChart" alternativeRowFillVisible="false" animated="false" layoutY="57.0" legendVisible="false" prefHeight="400.0" prefWidth="1084.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="57.0">
+                    <xAxis>
+                      <CategoryAxis label="Tijd" prefHeight="100.0" prefWidth="930.0" side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis label="Hartslag (BPM)" side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </AnchorPane>
+         </center>
+         <left>
+            <ListView fx:id="listViewNames" prefHeight="532.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets top="-1.0" />
+               </BorderPane.margin></ListView>
+         </left>
+      </BorderPane>
+   </children>
+</AnchorPane>

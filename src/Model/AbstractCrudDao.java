@@ -9,6 +9,7 @@ import java.util.HashSet;
 public abstract class AbstractCrudDao<T> {
     private Collection<NewDataListener> newDataListeners = new HashSet<>();
     private Collection<NewPatientListener> newPatientListeners = new HashSet<>();
+    private Collection<DataClearedListener> dataClearedListeners = new HashSet<>();
 
     public void addNewDataListener(final NewDataListener newListener){
         newDataListeners.add(newListener);
@@ -25,6 +26,10 @@ public abstract class AbstractCrudDao<T> {
         }
     }
 
+    public void addDataClearedListener(DataClearedListener newListener){
+        dataClearedListeners.add(newListener);
+    }
+
     void newPatient(CrudAction crudAction){
         crudAction.doAction();
         for(NewPatientListener newPatientListener : newPatientListeners){
@@ -39,15 +44,26 @@ public abstract class AbstractCrudDao<T> {
         }
     }
 
-    public interface CrudAction {
+    void dataCleared(CrudAction crudAction){
+        crudAction.doAction();
+        for(DataClearedListener dataClearedListener : dataClearedListeners){
+            dataClearedListener.stopConnectionThread();
+        }
+    }
+
+    public interface CrudAction{
         void doAction();
     }
 
-    public interface NewDataListener {
+    public interface NewDataListener{
         void updateLineChart();
     }
 
-    public interface NewPatientListener {
+    public interface NewPatientListener{
         void updateListView();
+    }
+
+    public interface DataClearedListener{
+        void stopConnectionThread();
     }
 }

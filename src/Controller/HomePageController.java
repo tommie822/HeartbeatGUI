@@ -27,8 +27,6 @@ import java.util.*;
 
 public class HomePageController implements AbstractCrudDao.NewPatientListener, AbstractCrudDao.NewDataListener {
     //TODO Make a saving function so that nurses can save data from one specific user or can save the real-time data that has been collected.
-    //TODO Javadoc code toevoegen
-    //TODO Permanente save lijst voor alle namen gelinkt aan wristbands. Zodat je niet steeds opnieuw hoeft te doen wanneer programma opnieuw aangaat.
     //TODO Warnings implementeren met geluid en popup.
 
     @FXML
@@ -164,9 +162,9 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener, A
     @FXML
     private void realTime(){
         if(realTimeButton.isSelected()) {
+            showLineChart();
             realTimeButton.setText("Disable Realtime");
         }else {
-            showLineChart();
             realTimeButton.setText("Enable Realtime");
         }
     }
@@ -179,10 +177,10 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener, A
             public void run() {
                 XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
                 DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
-                int ind = listViewNames.getSelectionModel().getSelectedIndex();
-                if(!dataDao.getPatientHeartRateList(ind).isEmpty()) {
-                    heartRateLineChart.setTitle(dataDao.getPatientName(ind));
-                    for (HeartRate heartRate : dataDao.getPatientHeartRateList(ind)) {
+                int selectedIdWristband = listViewNames.getSelectionModel().getSelectedIndex();
+                if(!dataDao.getPatientHeartRateList(selectedIdWristband).isEmpty()) {
+                    heartRateLineChart.setTitle(dataDao.getPatientName(selectedIdWristband));
+                    for (HeartRate heartRate : dataDao.getPatientHeartRateList(selectedIdWristband)) {
                         series.getData().add(new XYChart.Data(timeFormat.format(heartRate.getDate()), heartRate.getHeartBeat()));
                     }
                     heartRateLineChart.setAxisSortingPolicy(LineChart.SortingPolicy.X_AXIS);

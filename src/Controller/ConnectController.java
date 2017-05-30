@@ -1,6 +1,5 @@
 package Controller;
 
-import Model.*;
 import com.fazecast.jSerialComm.SerialPort;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,31 +8,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class ConnectController{
-    private static boolean connected = false;
     @FXML
-    private ListView<String> comListView;
+    private ListView<String> serialDeviceListView;
     @FXML
     private Button connect;
-    private DataDaoImpl dataDao = DataDaoImpl.getInstance();
     public void initialize(){
-        connected = false;
-        SerialPort[] serialPorts = SerialPort.getCommPorts();
-        ObservableList<String> list = FXCollections.observableArrayList();
-        for(SerialPort serialPort : serialPorts){
-            list.add(serialPort.getDescriptivePortName());
-        }
-        comListView.getItems().setAll(list);
+        initializeSerialDeviceListView();
     }
 
-    /**
-     * This function is executed after the connect button is pressed
-     * */
+    private void initializeSerialDeviceListView(){
+        SerialPort[] serialPorts = SerialPort.getCommPorts();
+        ObservableList<String> tempSerialDeviceList = FXCollections.observableArrayList();
+        for(SerialPort serialPort : serialPorts){
+            tempSerialDeviceList.add(serialPort.getDescriptivePortName());
+        }
+        serialDeviceListView.getItems().setAll(tempSerialDeviceList);
+    }
+
     public void connect(){
-        String nameOfSerialDevice = comListView.getSelectionModel().getSelectedItem();
-        Thread connectionToSerialDevice = new Thread(new ConnectToSerialDevice(nameOfSerialDevice));
+        String nameOfSerialDevice = serialDeviceListView.getSelectionModel().getSelectedItem();
+        Thread connectionToSerialDevice = new Thread(new ConnectionToSerialDevice(nameOfSerialDevice));
         connectionToSerialDevice.setDaemon(true);
         connectionToSerialDevice.start();
         closeStage();

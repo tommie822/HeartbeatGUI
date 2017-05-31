@@ -8,34 +8,36 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
-public class ConnectController{
-    @FXML
-    private ListView<String> serialDeviceListView;
-    @FXML
-    private Button connect;
-    public void initialize(){
-        initializeSerialDeviceListView();
-    }
+public class ConnectController {
 
-    private void initializeSerialDeviceListView(){
-        SerialPort[] serialPorts = SerialPort.getCommPorts();
-        ObservableList<String> tempSerialDeviceList = FXCollections.observableArrayList();
-        for(SerialPort serialPort : serialPorts){
-            tempSerialDeviceList.add(serialPort.getDescriptivePortName());
-        }
-        serialDeviceListView.getItems().setAll(tempSerialDeviceList);
-    }
+  @FXML
+  private ListView<String> serialDeviceListView;
+  @FXML
+  private Button connect;
 
-    public void connect(){
-        String nameOfSerialDevice = serialDeviceListView.getSelectionModel().getSelectedItem();
-        Thread connectionToSerialDevice = new Thread(new ConnectionToSerialDevice(nameOfSerialDevice));
-        connectionToSerialDevice.setDaemon(true);
-        connectionToSerialDevice.start();
-        closeStage();
-    }
+  public void initialize() {
+    initializeSerialDeviceListView();
+  }
 
-    private void closeStage(){
-        Stage stage = (Stage) connect.getScene().getWindow();
-        stage.close();
+  private void initializeSerialDeviceListView() {
+    SerialPort[] serialPorts = SerialPort.getCommPorts();
+    ObservableList<String> tempSerialDeviceList = FXCollections.observableArrayList();
+    for (SerialPort serialPort : serialPorts) {
+      tempSerialDeviceList.add(serialPort.getDescriptivePortName());
     }
+    serialDeviceListView.getItems().setAll(tempSerialDeviceList);
+  }
+
+  public void connect() {
+    String nameOfSerialDevice = serialDeviceListView.getSelectionModel().getSelectedItem();
+    Thread connectionToSerialDevice = new Thread(new ConnectionToSerialDevice(nameOfSerialDevice));
+    connectionToSerialDevice.setDaemon(true);
+    connectionToSerialDevice.start();
+    closeStage();
+  }
+
+  private void closeStage() {
+    Stage stage = (Stage) connect.getScene().getWindow();
+    stage.close();
+  }
 }

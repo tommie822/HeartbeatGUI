@@ -4,29 +4,30 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Patient implements Serializable{
-    private int idWristband;
-    private String name;
-    private List<HeartRate> heartRateList = new ArrayList<HeartRate>();
+class Patient implements Serializable {
 
-    Patient(int idWristband, String name){
-        this.idWristband = idWristband;
-        this.name = name;
-    }
+  private int idWristband;
+  private String name;
+  private List<HeartRate> heartRateList = new ArrayList<HeartRate>();
 
-    int getIdWristband() {
-        return idWristband;
-    }
+  Patient(int idWristband, String name) {
+    this.idWristband = idWristband;
+    this.name = name;
+  }
 
-    String getName() {
-        return name;
-    }
+  int getIdWristband() {
+    return idWristband;
+  }
 
-    void setName(String name) {
-        this.name = name;
-    }
+  String getName() {
+    return name;
+  }
 
-    List<HeartRate> getHeartRateList() {
-        return heartRateList;
-    }
+  void setName(String name) {
+    this.name = name;
+  }
+
+  List<HeartRate> getHeartRateList() {
+    return heartRateList;
+  }
 }

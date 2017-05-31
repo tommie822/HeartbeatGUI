@@ -4,12 +4,14 @@ import Model.*;
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.IOException;
+import java.util.concurrent.*;
 
 public class ConnectionToSerialDevice implements Runnable, AbstractCrudDao.DataClearedListener{
     private String selectedSerialPortName;
     private DataDaoImpl dataDao = DataDaoImpl.getInstance();
     private static volatile int threadCounter = 0;
     private boolean stopThreadWhenImport = false;
+    private SerialPort connectedSerialPort;
 
     ConnectionToSerialDevice(String selectedSerialPortName){
         this.selectedSerialPortName = selectedSerialPortName;
@@ -27,7 +29,7 @@ public class ConnectionToSerialDevice implements Runnable, AbstractCrudDao.DataC
                 dataDao.clearPatients();
                 waitUntilThisThreadIsOnlyThread();
                 initializeSerialPort(serialPort);
-                collectIncomingData(serialPort);
+                collectIncomingData();
                 serialPort.closePort();
                 System.out.println("Close thread");
                 break;
@@ -51,31 +53,49 @@ public class ConnectionToSerialDevice implements Runnable, AbstractCrudDao.DataC
         serialPort.openPort();
         //serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
         DataDaoImpl.getInstance().addDataClearedListener(this);
+        connectedSerialPort = serialPort;
     }
 
-    private void collectIncomingData(SerialPort serialPort){
+    private void collectIncomingData(){
+        final Runnable stuffToDo = new Thread(){
+            @Override
+            public void run(){
+                addDataToPatient();
+            }
+        };
         while (threadCounter == 1 && !stopThreadWhenImport) {
-            String string = "";
+            final ExecutorService executor = Executors.newSingleThreadExecutor();
+            final Future future = executor.submit(stuffToDo);
+            executor.shutdown();
             try {
-                string = processIncomingDataToStrings(serialPort);
-                if(threadCounter == 1 && !stopThreadWhenImport){
-                    dataDao.addNewPatientHeartRateData(string);
-                    System.out.println("String: " + string);
-                }
-            } catch (IOException e){
+                future.get(10, TimeUnit.SECONDS);
+            }catch (Exception e){
                 e.printStackTrace();
+                break;
             }
         }
     }
 
-    private String processIncomingDataToStrings(SerialPort serialPort) throws IOException{
-        //TODO timeout implementeren
+    private void addDataToPatient(){
+        String string = "";
+        try {
+            string = processIncomingDataToStrings();
+            if(threadCounter == 1 && !stopThreadWhenImport){
+                dataDao.addNewPatientHeartRateData(string);
+                System.out.println("String: " + string);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private String processIncomingDataToStrings() throws IOException{
         System.out.println("incomingDataProcessing");
         String string = "";
-        char c = (char) serialPort.getInputStream().read();
+        char c = (char) connectedSerialPort.getInputStream().read();
         while (c != '!') {
             string = string + (c);
-            c = (char) serialPort.getInputStream().read();
+            c = (char) connectedSerialPort.getInputStream().read();
         }
         System.out.println(string);
         return string;

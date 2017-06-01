@@ -19,7 +19,7 @@ public class EditorController {
   private DataDao dataDao = DataDaoImpl.getInstance();
 
   /**
-   * Initializes the editors listView with the amount of ID devices
+   * Initializes the editors patientListView with the amount of ID devices
    * and adds an listener to the listviewer
    */
   public void initialize() {

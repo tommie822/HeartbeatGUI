@@ -30,7 +30,7 @@ public class ConnectController {
 
   public void connect() {
     String nameOfSerialDevice = serialDeviceListView.getSelectionModel().getSelectedItem();
-    Thread connectionToSerialDevice = new Thread(new ConnectionToSerialDevice(nameOfSerialDevice));
+    Thread connectionToSerialDevice = new Thread(new ConnectionToSerialDeviceThread(nameOfSerialDevice));
     connectionToSerialDevice.setDaemon(true);
     connectionToSerialDevice.start();
     closeStage();

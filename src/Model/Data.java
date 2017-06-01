@@ -1,6 +1,5 @@
 package Model;
 
-import com.sun.istack.internal.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,17 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Data implements Serializable {
-
   private static Data instance = null;
   private List<Patient> patients = new ArrayList<Patient>();
 
-  private Data() {
+  protected Data() {
   }
 
   static Data getInstance() {
     if (instance == null) {
       try {
-        String ApplicationDataFolderPath = getLocalApplicationDataFolderPath();
+        String ApplicationDataFolderPath = DataPath.getLocalApplicationDataFolderPath();
         instance = getSavedDataFrom(ApplicationDataFolderPath);
       } catch (ClassNotFoundException | IOException e) {
         //If there isn't any saved data, an exception will be throwed so then a fresh Data object will be made.
@@ -33,20 +31,7 @@ public class Data implements Serializable {
     return instance;
   }
 
-  @NotNull
-  private static String getLocalApplicationDataFolderPath() {
-    String workingDirectory;
-    String OS = (System.getProperty("os.name")).toUpperCase();
-    if (OS.contains("WIN")) {
-      workingDirectory = System.getenv("AppData");
-    } else {
-      workingDirectory = System.getProperty("user.home");
-      workingDirectory += "/Library/Application Support";
-    }
-    return workingDirectory + "\\data.txt";
-  }
-
-  private static Data getSavedDataFrom(String folderPathForSavedData)
+  public static Data getSavedDataFrom(String folderPathForSavedData)
       throws ClassNotFoundException, IOException {
     File savedDataFile = new File(folderPathForSavedData);
     FileInputStream fileInputStream = new FileInputStream(savedDataFile);
@@ -58,7 +43,7 @@ public class Data implements Serializable {
 
   public static void saveStateOfDataInstance() {
     try {
-      String dataFolderPath = getLocalApplicationDataFolderPath();
+      String dataFolderPath = DataPath.getLocalApplicationDataFolderPath();
       saveInstanceInto(dataFolderPath);
     } catch (IOException e) {
       e.printStackTrace();

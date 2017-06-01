@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class ConnectionToSerialDevice implements Runnable, AbstractCrudDao.DataClearedListener {
+public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao.DataClearedListener {
 
   private static volatile int threadCounter = 0;
   private String selectedSerialPortName;
@@ -17,7 +17,7 @@ public class ConnectionToSerialDevice implements Runnable, AbstractCrudDao.DataC
   private boolean stopThreadWhenImport = false;
   private SerialPort connectedSerialPort;
 
-  ConnectionToSerialDevice(String selectedSerialPortName) {
+  ConnectionToSerialDeviceThread(String selectedSerialPortName) {
     this.selectedSerialPortName = selectedSerialPortName;
   }
 

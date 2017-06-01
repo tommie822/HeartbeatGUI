@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 public class DataDaoImpl extends AbstractCrudDao implements DataDao {
 
   private static final DataDaoImpl instance = new DataDaoImpl();
+  private static final Data data = Data.getInstance();
 
   private DataDaoImpl() {
 
@@ -26,8 +27,8 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
   @Override
   public List<HeartRate> getPatientHeartRateList(int idWristband) {
     for (int i = 0; i < getNumberOfPatients(); i++) {
-      if (Data.getInstance().getPatients().get(i).getIdWristband() == idWristband) {
-        return Data.getInstance().getPatients().get(i).getHeartRateList();
+      if (data.getPatients().get(i).getIdWristband() == idWristband) {
+        return data.getPatients().get(i).getHeartRateList();
       }
     }
     return new ArrayList<HeartRate>();
@@ -35,14 +36,14 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
 
   @Override
   public int getPatientID(int index) {
-    return Data.getInstance().getPatients().get(index).getIdWristband();
+    return data.getPatients().get(index).getIdWristband();
   }
 
   @Override
   public List<HeartRate> getPatientHeartRateList(String name) {
     for (int i = 0; i < getNumberOfPatients(); i++) {
-      if (Data.getInstance().getPatients().get(i).getName().equals(name)) {
-        return Data.getInstance().getPatients().get(i).getHeartRateList();
+      if (data.getPatients().get(i).getName().equals(name)) {
+        return data.getPatients().get(i).getHeartRateList();
       }
     }
     return null;
@@ -56,8 +57,8 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
   @Override
   public String getPatientName(int idWristband) {
     for (int i = 0; i < getNumberOfPatients(); i++) {
-      if (Data.getInstance().getPatients().get(i).getIdWristband() == idWristband) {
-        return Data.getInstance().getPatients().get(i).getName();
+      if (data.getPatients().get(i).getIdWristband() == idWristband) {
+        return data.getPatients().get(i).getName();
       }
     }
     return null;
@@ -69,8 +70,8 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
       @Override
       public void doAction() {
         for (int i = 0; i < getNumberOfPatients(); i++) {
-          if (Data.getInstance().getPatients().get(i).getIdWristband() == idWristband) {
-            Data.getInstance().getPatients().get(i).setName(newName);
+          if (data.getPatients().get(i).getIdWristband() == idWristband) {
+            data.getPatients().get(i).setName(newName);
           }
         }
       }
@@ -79,12 +80,12 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
 
   @Override
   public int getNumberOfPatients() {
-    return Data.getInstance().getPatients().size();
+    return data.getPatients().size();
   }
 
   @Override
   public List<Patient> getAllPatients() {
-    return Data.getInstance().getPatients();
+    return data.getPatients();
   }
 
   @Override
@@ -92,7 +93,7 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
     newPatient(new CrudAction() {
       @Override
       public void doAction() {
-        Data.getInstance().getPatients().add(patient);
+        data.getPatients().add(patient);
       }
     });
   }
@@ -102,7 +103,7 @@ public class DataDaoImpl extends AbstractCrudDao implements DataDao {
     dataCleared(new CrudAction() {
       @Override
       public void doAction() {
-        Data.getInstance().getPatients().clear();
+        data.getPatients().clear();
       }
     });
   }

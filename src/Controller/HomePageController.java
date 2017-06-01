@@ -28,7 +28,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
 
   @FXML
   public LineChart<String, Integer> heartRateLineChart;
-  //TODO Make a saving function so that nurses can save data from one specific user or can save the real-time data that has been collected.
+  //TODO Make a saving function so that nurses can saveButton data from one specific user or can saveButton the real-time data that has been collected.
   //TODO Warnings implementeren met geluid en popup.
   @FXML
   private ListView<String> listViewNames;
@@ -85,7 +85,11 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
 
   @FXML
   private void save() {
-
+    Stage save = createStage("Save", true);
+    Pane pane = loadFxmlIntoPane("View/Save.fxml");
+    Scene scene = createScene(pane, 400, 600);
+    save.setScene(scene);
+    save.show();
   }
 
   @FXML

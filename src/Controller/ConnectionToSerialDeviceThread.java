@@ -1,7 +1,8 @@
 package Controller;
 
 import Model.AbstractCrudDao;
-import Model.DataDaoImpl;
+import Model.DaoImpl;
+import Model.DataPath;
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao
 
   private static volatile int threadCounter = 0;
   private String selectedSerialPortName;
-  private DataDaoImpl dataDao = DataDaoImpl.getInstance();
+  private DaoImpl dataDao =  DataPath.dao;
   private boolean stopThreadWhenImport = false;
   private SerialPort connectedSerialPort;
 
@@ -56,7 +57,7 @@ public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao
   private void initializeSerialPort(SerialPort serialPort) {
     serialPort.openPort();
     //serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-    DataDaoImpl.getInstance().addDataClearedListener(this);
+    DataPath.dao.addDataClearedListener(this);
     connectedSerialPort = serialPort;
   }
 

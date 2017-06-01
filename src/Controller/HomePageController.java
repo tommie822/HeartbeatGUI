@@ -1,7 +1,8 @@
 package Controller;
 
 import Model.AbstractCrudDao;
-import Model.DataDaoImpl;
+import Model.DaoImpl;
+import Model.DataPath;
 import Model.HeartRate;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -15,7 +16,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.Axis;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
@@ -28,14 +32,18 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
 
   @FXML
   public LineChart<String, Integer> heartRateLineChart;
-  //TODO Make a saving function so that nurses can saveButton data from one specific user or can saveButton the real-time data that has been collected.
+  //TODO scaling of linechart en data kunnen selecteren
   //TODO Warnings implementeren met geluid en popup.
   @FXML
   private ListView<String> listViewNames;
   @FXML
   private ToggleButton realTimeButton;
+  @FXML
+  private NumberAxis yAxis;
+  @FXML
+  private CategoryAxis xAxis;
 
-  private DataDaoImpl dataDao = DataDaoImpl.getInstance();
+  private DaoImpl dataDao = DataPath.dao;
 
   @FXML
   private void initialize() {
@@ -148,6 +156,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
             heartRate.getHeartBeat()));
       }
       heartRateLineChart.setAxisSortingPolicy(LineChart.SortingPolicy.X_AXIS);
+      yAxis.setAutoRanging(true);
       heartRateLineChart.getData().setAll(series);
     }
   }
@@ -165,6 +174,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
             newSeries.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
                 heartRate.getHeartBeat()));
           }
+          yAxis.setAutoRanging(true);
           heartRateLineChart.getData().add(newSeries);
         }
       }

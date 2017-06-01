@@ -1,5 +1,6 @@
+import Model.DaoImpl;
 import Model.Data;
-import Model.DataDao;
+import Model.DataPath;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +12,15 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
   private Scene homePage;
+  private Data data = new Data();
 
   public static void main(String[] args) {
     launch(args);
   }
 
   public void start(Stage mainStage) throws IOException {
+    DataPath.data = data.loadStateFrom(DataPath.getLocalApplicationDataFolderPath());
+    DataPath.dao = new DaoImpl(DataPath.data);
     setHomePage();
     addStyleToHomePage();
     initializeStage(mainStage);
@@ -42,7 +46,7 @@ public class Main extends Application {
   }
 
   public void stop() {
-    Data.saveStateOfDataInstance();
+    DataPath.data.saveStateInto(DataPath.getLocalApplicationDataFolderPath());
     System.out.println("The system closed successfully");
   }
 }

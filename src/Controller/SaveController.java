@@ -1,10 +1,11 @@
 package Controller;
 
-import Model.DataDaoImpl;
+import Model.DaoImpl;
+import Model.Data;
+import Model.DataPath;
+import Model.Patient;
 import java.awt.FileDialog;
 import java.awt.Frame;
-import java.io.File;
-import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,22 +20,21 @@ public class SaveController {
   @FXML
   private ListView<CheckBox> patientListView;
 
-  private DataDaoImpl dataDao = DataDaoImpl.getInstance();
+  private DaoImpl dataDao = DataPath.dao;
 
 
   @FXML
   private void initialize() {
 
     ObservableList<CheckBox> patientNameCheckBoxes = FXCollections.observableArrayList();
-    int totalPatients = dataDao.getNumberOfPatients();
-    for(int idWristband = 0; idWristband < totalPatients; idWristband++){
+    for(int idWristband = 0; idWristband < 50; idWristband++){
       String patientName = dataDao.getPatientName(idWristband);
       CheckBox checkBox = new CheckBox(patientName);
       patientNameCheckBoxes.add(checkBox);
     }
     patientListView.getItems().setAll(patientNameCheckBoxes);
   }
-
+  private String path;
   @FXML
   private void save() {
     Thread thread = new Thread(new Runnable() {
@@ -43,17 +43,34 @@ public class SaveController {
         FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
         dialog.setMode(FileDialog.SAVE);
         dialog.setVisible(true);
-        for(File file : dialog.getFiles()){
-          try {
-            file.createNewFile();
-          }catch (IOException e){
-            e.printStackTrace();
-          }
-          System.out.println(file.getAbsolutePath());
-        }
+        dialog.setAlwaysOnTop(true);
+        String fileName = dialog.getFile();
+        String directoryName = dialog.getDirectory();
+        path = directoryName + fileName + ".heart";
+        System.out.println(path);
       }
     });
     thread.setDaemon(true);
     thread.start();
+    try {
+      thread.join();
+    }catch (InterruptedException e){
+      e.printStackTrace();
+    }
+    Data data = new Data();
+    int index = 0;
+    int index2 = 0;
+    for(CheckBox checkBox : patientListView.getItems()){
+      if(checkBox.isSelected()){
+        int id = index;
+        String patientName = dataDao.getPatientName(index2);
+        Patient patient = new Patient(id, patientName);
+        patient.getHeartRateList().addAll(dataDao.getPatientHeartRateList(index2));
+        data.getPatients().add(patient);
+        index++;
+      }
+      index2++;
+    }
+    data.saveStateInto(path);
   }
 }

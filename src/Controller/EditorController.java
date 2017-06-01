@@ -1,7 +1,8 @@
 package Controller;
 
-import Model.DataDao;
-import Model.DataDaoImpl;
+import Model.Dao;
+import Model.DaoImpl;
+import Model.DataPath;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,7 +17,7 @@ public class EditorController {
   private TextField nameInputField;
   @FXML
   private ListView<String> listViewID;
-  private DataDao dataDao = DataDaoImpl.getInstance();
+  private Dao dataDao = DataPath.dao;
 
   /**
    * Initializes the editors patientListView with the amount of ID devices

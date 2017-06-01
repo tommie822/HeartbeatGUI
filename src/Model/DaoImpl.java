@@ -11,17 +11,21 @@ import java.util.StringTokenizer;
 /**
  * Created by tom on 11-5-2017.
  */
-public class DataDaoImpl extends AbstractCrudDao implements DataDao {
+public class DaoImpl extends AbstractCrudDao implements Dao {
 
-  private static final DataDaoImpl instance = new DataDaoImpl();
-  private static final Data data = Data.getInstance();
+  private Data data;
 
-  private DataDaoImpl() {
-
+  public DaoImpl(Data data) {
+    this.data = data;
   }
 
-  public static DataDaoImpl getInstance() {
-    return instance;
+  public void setData(Data data2){
+    newPatient(new CrudAction() {
+      @Override
+      public void doAction() {
+        data = data2;
+      }
+    });
   }
 
   @Override

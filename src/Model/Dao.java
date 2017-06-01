@@ -2,7 +2,7 @@ package Model;
 
 import java.util.List;
 
-public interface DataDao {
+public interface Dao {
 
   List<HeartRate> getPatientHeartRateList(int idWristband);
 

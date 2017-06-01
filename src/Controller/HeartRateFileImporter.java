@@ -1,6 +1,8 @@
 package Controller;
 
-import Model.DataDaoImpl;
+import Model.DaoImpl;
+import Model.Data;
+import Model.DataPath;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -9,7 +11,7 @@ import javafx.stage.Stage;
 
 public class HeartRateFileImporter {
 
-  private static DataDaoImpl dataDao = DataDaoImpl.getInstance();
+  private static DaoImpl dataDao = DataPath.dao;
 
   public static void open() {
     File heartrateFile = openFileGetter();
@@ -25,16 +27,24 @@ public class HeartRateFileImporter {
     fileChooser.setTitle("importer");
     fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
     fileChooser.getExtensionFilters()
-        .add(new FileChooser.ExtensionFilter("Heartrate files", "*.heartrate"));
+        .add(new FileChooser.ExtensionFilter("Heartrate files", "*.heartrate", "*.heart"));
     return fileChooser.showOpenDialog(stage);
   }
 
   private static void importHeartrateData(File heartrateFile) {
     try {
-      Scanner scanner = new Scanner(heartrateFile);
-      dataDao.clearPatients();
-      while (scanner.hasNext()) {
-        dataDao.addNewPatientHeartRateData(scanner.nextLine());
+      if(heartrateFile.getPath().contains(".heartrate")) {
+        Scanner scanner = new Scanner(heartrateFile);
+        dataDao.clearPatients();
+        while (scanner.hasNext()) {
+          dataDao.addNewPatientHeartRateData(scanner.nextLine());
+        }
+      }else if(heartrateFile.getPath().contains(".heart")){
+        Data data = new Data();
+        dataDao.clearPatients();
+        data = data.loadStateFrom(heartrateFile.getAbsolutePath());
+        dataDao.setData(data);
+        DataPath.data = data;
       }
     } catch (IOException e) {
       e.printStackTrace();

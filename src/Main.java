@@ -48,5 +48,6 @@ public class Main extends Application {
   public void stop() {
     DataPath.data.saveStateInto(DataPath.getLocalApplicationDataFolderPath());
     System.out.println("The system closed successfully");
+    System.exit(0);
   }
 }

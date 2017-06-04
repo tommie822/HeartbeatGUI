@@ -6,8 +6,6 @@ public interface Dao {
 
   List<HeartRate> getPatientHeartRateList(int idWristband);
 
-  List<HeartRate> getPatientHeartRateList(String name);
-
   boolean patientHeartRateListIsNotEmpty(int idWristband);
 
   String getPatientName(int idWristband);

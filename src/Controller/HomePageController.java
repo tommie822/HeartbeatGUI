@@ -1,13 +1,17 @@
 package Controller;
 
 import Model.AbstractCrudDao;
+import Model.AbstractCrudDao.CriticalStateListener;
 import Model.DaoImpl;
 import Model.DataPath;
 import Model.HeartRate;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,6 +25,10 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
@@ -28,12 +36,12 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class HomePageController implements AbstractCrudDao.NewPatientListener,
-    AbstractCrudDao.NewDataListener {
+    AbstractCrudDao.NewDataListener, CriticalStateListener {
 
   @FXML
   public LineChart<String, Integer> heartRateLineChart;
   //TODO scaling of linechart en data kunnen selecteren
-  //TODO Warnings implementeren met geluid en popup.
+  //TODO warning trigger different for each patient
   @FXML
   private ListView<String> listViewNames;
   @FXML
@@ -49,6 +57,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
   private void initialize() {
     dataDao.addNewDataListener(this);
     dataDao.addNewPatientListener(this);
+    dataDao.addCriticalStateListener(this);
     updatePatientListView();
     listViewNames.getSelectionModel().selectedIndexProperty()
         .addListener(new ChangeListener<Number>() {
@@ -182,10 +191,10 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
   }
 
   public void updatePatientListView() {
+    ObservableList<String> patientNames = FXCollections.observableArrayList();
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-        ObservableList<String> patientNames = FXCollections.observableArrayList();
         for (int index = 0; index < 50; index++) {
           patientNames.add("");
         }
@@ -197,6 +206,19 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
         int previousSelectedCell = listViewNames.getSelectionModel().getSelectedIndex();
         listViewNames.getItems().setAll(patientNames);
         listViewNames.getSelectionModel().select(previousSelectedCell);
+      }
+    });
+  }
+
+  @Override
+  public void showWarning(int idWristband, String patientName) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        Toolkit.getDefaultToolkit().beep();
+        Alert alert = new Alert(AlertType.WARNING, "Patient "+patientName+" with wristband: "+idWristband+" has probably some problems", ButtonType.CLOSE);
+        alert.setTitle("Warning");
+        alert.showAndWait();
       }
     });
   }

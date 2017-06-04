@@ -9,6 +9,9 @@ public class Patient implements Serializable {
   private int idWristband;
   private String name;
   private List<HeartRate> heartRateList = new ArrayList<HeartRate>();
+  public boolean isCritical = false;
+  private int minumumHeartrate = 50;
+  private int maximumHeartrate = 100;
 
   public Patient(int idWristband, String name) {
     this.idWristband = idWristband;

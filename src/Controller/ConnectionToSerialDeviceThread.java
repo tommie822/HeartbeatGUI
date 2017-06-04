@@ -86,7 +86,7 @@ public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao
     try {
       string = processIncomingDataToStrings();
       if (threadCounter == 1 && !stopThreadWhenImport) {
-        dataDao.addNewPatientHeartRateData(string);
+        dataDao.addNewPatientHeartRateDataConnect(string);
         System.out.println("String: " + string);
       }
     } catch (IOException e) {

@@ -1,12 +1,20 @@
 package Model;
 
+import java.awt.Toolkit;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * Created by tom on 11-5-2017.
@@ -19,7 +27,7 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
     this.data = data;
   }
 
-  public void setData(Data data2){
+  public void setData(Data data2) {
     newPatient(new CrudAction() {
       @Override
       public void doAction() {
@@ -41,16 +49,6 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
   @Override
   public int getPatientID(int index) {
     return data.getPatients().get(index).getIdWristband();
-  }
-
-  @Override
-  public List<HeartRate> getPatientHeartRateList(String name) {
-    for (int i = 0; i < getNumberOfPatients(); i++) {
-      if (data.getPatients().get(i).getName().equals(name)) {
-        return data.getPatients().get(i).getHeartRateList();
-      }
-    }
-    return null;
   }
 
   @Override
@@ -127,7 +125,7 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
           hasPatient = false;
           stringTokenizer = new StringTokenizer(data);
           if (stringTokenizer.countTokens() == 3) {
-            setIdWristband(stringTokenizer.nextToken());
+            setIdWristband(Integer.parseInt(stringTokenizer.nextToken()));
             for (Patient patient : getAllPatients()) {
               if (patient.getIdWristband() == idWristband) {
                 setHeartbeat(stringTokenizer.nextToken());
@@ -149,8 +147,8 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
         }
       }
 
-      private void setIdWristband(String stringIdWristband) {
-        idWristband = Integer.parseInt(stringIdWristband);
+      private void setIdWristband(int stringIdWristband) {
+        idWristband = stringIdWristband;
       }
 
       private void setHeartbeat(String stringHeartbeat) {
@@ -162,5 +160,67 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
         date = timeFormat.parse(stringDate);
       }
     });
+
+
+  }
+
+  public void addNewPatientHeartRateDataConnect(String data) {
+    addNewPatientHeartRateData(data);
+    StringTokenizer stringTokenizer = new StringTokenizer(data);
+    if (stringTokenizer.countTokens() == 3) {
+      int idWristband = Integer.parseInt(stringTokenizer.nextToken());
+      List<HeartRate> heartRateList = getPatientHeartRateList(idWristband);
+      int listSize = heartRateList.size();
+      int total = 0;
+      if (listSize > 5) {
+        for (int i = listSize - 5; i < listSize; i++) {
+          total = total + heartRateList.get(i).getHeartBeat();
+        }
+        int average = total / 5;
+        if (average < 50 || average > 100  ) {
+          if(!getPatientIsCritical(idWristband)) {
+            setPatientIsCritical(idWristband, true);
+          }
+        }else{
+          setPatientIsCritical(idWristband, false);
+        }
+      }
+    }
+  }
+
+  private void setPatientIsCritical(int idWristband, boolean isCritical){
+    String patientName = getPatientName(idWristband);
+    updateCritical(new CrudAction2() {
+      @Override
+      public void doAction() {
+        try {
+          Patient patient = data.getPatients().get(idWristband);
+          patient.isCritical = isCritical;
+        }catch (IndexOutOfBoundsException e){
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public int getIdWristband() {
+        return idWristband;
+      }
+
+      @Override
+      public String getPatientName() {
+        return patientName;
+      }
+    });
+
+
+  }
+
+  public boolean getPatientIsCritical(int idWristband) {
+    try {
+      return data.getPatients().get(idWristband).isCritical;
+    } catch (IndexOutOfBoundsException e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 }

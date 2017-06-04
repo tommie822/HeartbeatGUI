@@ -27,13 +27,13 @@ public class HeartRateFileImporter {
     fileChooser.setTitle("importer");
     fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
     fileChooser.getExtensionFilters()
-        .add(new FileChooser.ExtensionFilter("Heartrate files", "*.heartrate", "*.heart"));
+        .add(new FileChooser.ExtensionFilter("Heartrate files", "*.txt", "*.heart"));
     return fileChooser.showOpenDialog(stage);
   }
 
   private static void importHeartrateData(File heartrateFile) {
     try {
-      if(heartrateFile.getPath().contains(".heartrate")) {
+      if(heartrateFile.getPath().contains(".txt")) {
         Scanner scanner = new Scanner(heartrateFile);
         dataDao.clearPatients();
         while (scanner.hasNext()) {

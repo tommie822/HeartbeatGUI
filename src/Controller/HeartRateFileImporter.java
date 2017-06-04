@@ -33,7 +33,7 @@ public class HeartRateFileImporter {
 
   private static void importHeartrateData(File heartrateFile) {
     try {
-      if(heartrateFile.getPath().contains(".txt")) {
+      if(heartrateFile.getPath().toLowerCase().contains(".txt")) {
         Scanner scanner = new Scanner(heartrateFile);
         dataDao.clearPatients();
         while (scanner.hasNext()) {

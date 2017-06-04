@@ -82,12 +82,11 @@ public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao
   }
 
   private void addDataToPatient() {
-    String string = "";
+    String string;
     try {
       string = processIncomingDataToStrings();
       if (threadCounter == 1 && !stopThreadWhenImport) {
         dataDao.addNewPatientHeartRateDataConnect(string);
-        System.out.println("String: " + string);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -95,14 +94,12 @@ public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao
   }
 
   private String processIncomingDataToStrings() throws IOException {
-    System.out.println("incomingDataProcessing");
     String string = "";
     char c = (char) connectedSerialPort.getInputStream().read();
     while (c != '!') {
       string = string + (c);
       c = (char) connectedSerialPort.getInputStream().read();
     }
-    System.out.println(string);
     return string;
   }
 

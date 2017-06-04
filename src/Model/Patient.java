@@ -10,8 +10,8 @@ public class Patient implements Serializable {
   private String name;
   private List<HeartRate> heartRateList = new ArrayList<HeartRate>();
   public boolean isCritical = false;
-  private int minumumHeartrate = 50;
-  private int maximumHeartrate = 100;
+  private int minumumHeartrate = 25;
+  private int maximumHeartrate = 150;
 
   public Patient(int idWristband, String name) {
     this.idWristband = idWristband;
@@ -32,5 +32,21 @@ public class Patient implements Serializable {
 
   public List<HeartRate> getHeartRateList() {
     return heartRateList;
+  }
+
+  public int getMinumumHeartrate() {
+    return minumumHeartrate;
+  }
+
+  public int getMaximumHeartrate() {
+    return maximumHeartrate;
+  }
+
+  public void setMaximumHeartrate(int maximumHeartrate) {
+    this.maximumHeartrate = maximumHeartrate;
+  }
+
+  public void setMinumumHeartrate(int minumumHeartrate) {
+    this.minumumHeartrate = minumumHeartrate;
   }
 }

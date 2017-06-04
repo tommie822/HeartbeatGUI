@@ -33,7 +33,7 @@ public abstract class AbstractCrudDao<T> {
     dataClearedListeners.add(newListener);
   }
 
-  public void addCriticalStateListener(final CriticalStateListener newListener){
+  public void addCriticalStateListener(final CriticalStateListener newListener) {
     criticalStateListeners.add(newListener);
   }
 
@@ -58,10 +58,12 @@ public abstract class AbstractCrudDao<T> {
     }
   }
 
-  void updateCritical(CrudAction2 crudAction){
+  void updateCritical(CrudAction2 crudAction) {
     crudAction.doAction();
-    for (CriticalStateListener criticalStateListener: criticalStateListeners){
-      criticalStateListener.showWarning(crudAction.getIdWristband(), crudAction.getPatientName());
+    if (crudAction.getIsCritical()) {
+      for (CriticalStateListener criticalStateListener : criticalStateListeners) {
+        criticalStateListener.showWarning(crudAction.getIdWristband(), crudAction.getPatientName());
+      }
     }
   }
 
@@ -73,8 +75,12 @@ public abstract class AbstractCrudDao<T> {
   public interface CrudAction2 {
 
     void doAction();
+
     int getIdWristband();
+
     String getPatientName();
+
+    boolean getIsCritical();
   }
 
   public interface NewDataListener {

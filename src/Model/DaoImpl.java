@@ -156,7 +156,8 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
       }
 
       private void setDate(String stringDate) throws ParseException {
-        DateFormat timeFormat = new SimpleDateFormat("MM:dd:yyyy:HH:mm:ss");
+        DateFormat timeFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+        stringDate = stringDate.replace("!", "");
         date = timeFormat.parse(stringDate);
       }
     });
@@ -164,9 +165,19 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
 
   }
 
-  public void addNewPatientHeartRateDataConnect(String data) {
-    addNewPatientHeartRateData(data);
-    StringTokenizer stringTokenizer = new StringTokenizer(data);
+  @Override
+  public Patient getPatient(int idWristband) {
+    for (int i = 0; i < getNumberOfPatients(); i++) {
+      if (data.getPatients().get(i).getIdWristband() == idWristband) {
+        return data.getPatients().get(i);
+      }
+    }
+    return null;
+  }
+
+  public void addNewPatientHeartRateDataConnect(String dataString) {
+    addNewPatientHeartRateData(dataString);
+    StringTokenizer stringTokenizer = new StringTokenizer(dataString);
     if (stringTokenizer.countTokens() == 3) {
       int idWristband = Integer.parseInt(stringTokenizer.nextToken());
       List<HeartRate> heartRateList = getPatientHeartRateList(idWristband);
@@ -177,7 +188,8 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
           total = total + heartRateList.get(i).getHeartBeat();
         }
         int average = total / 5;
-        if (average < 50 || average > 100  ) {
+        System.out.println(getPatient(idWristband).getMinumumHeartrate()+ "\t" + average + "\t" + getPatient(idWristband).getMaximumHeartrate() );
+        if (average < getPatient(idWristband).getMinumumHeartrate() || average > getPatient(idWristband).getMaximumHeartrate()) {
           if(!getPatientIsCritical(idWristband)) {
             setPatientIsCritical(idWristband, true);
           }
@@ -194,7 +206,7 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
       @Override
       public void doAction() {
         try {
-          Patient patient = data.getPatients().get(idWristband);
+          Patient patient = getPatient(idWristband);
           patient.isCritical = isCritical;
         }catch (IndexOutOfBoundsException e){
           e.printStackTrace();
@@ -210,17 +222,28 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
       public String getPatientName() {
         return patientName;
       }
+
+      @Override
+      public boolean getIsCritical() {
+        return isCritical;
+      }
     });
 
 
   }
 
-  public boolean getPatientIsCritical(int idWristband) {
+  private boolean getPatientIsCritical(int idWristband) {
     try {
-      return data.getPatients().get(idWristband).isCritical;
+      for (int i = 0; i < getNumberOfPatients(); i++) {
+        if (data.getPatients().get(i).getIdWristband() == idWristband) {
+          return data.getPatients().get(i).isCritical;
+        }
+      }
     } catch (IndexOutOfBoundsException e) {
       e.printStackTrace();
       return false;
     }
+    System.out.println("couldnt find patient is critical");
+    return false;
   }
 }

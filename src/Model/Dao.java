@@ -23,4 +23,6 @@ public interface Dao {
   void addNewPatientHeartRateData(String data);
 
   void setPatientName(int idWristband, String newName);
+
+  Patient getPatient(int idWristband);
 }

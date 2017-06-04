@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-  minWidth="-Infinity" prefHeight="379.0" prefWidth="200.0"
-  xmlns="http://javafx.com/javafx/8" fx:controller="Controller.EditorController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="338.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditorController">
   <children>
-    <ListView AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
-      prefHeight="349.0" prefWidth="200.0" fx:id="listViewID"/>
-    <TextField AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" layoutY="348.0"
-      onAction="#linkID" onKeyReleased="#linkID" prefHeight="31.0" prefWidth="200.0"
-      fx:id="nameInputField"/>
+    <ListView fx:id="listViewID" prefHeight="276.0" prefWidth="587.0" AnchorPane.bottomAnchor="138.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+    <TextField fx:id="nameInputField" layoutX="43.0" layoutY="294.0" onAction="#linkID" onKeyReleased="#linkID" prefHeight="31.0" prefWidth="501.0" AnchorPane.bottomAnchor="89.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="43.0" />
+      <TextField fx:id="maximumHeartRate" layoutX="228.0" layoutY="381.0" onAction="#saveMaximum" onKeyReleased="#saveMaximum" prefHeight="21.0" prefWidth="50.0" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="43.0" />
+      <TextField fx:id="minimumHeartRate" layoutX="43.0" layoutY="381.0" onAction="#saveMinimum" onKeyReleased="#saveMinimum" prefHeight="31.0" prefWidth="50.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="43.0" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="115.0" layoutY="278.0" prefHeight="21.0" prefWidth="92.0" text="Patient name" AnchorPane.bottomAnchor="117.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="114.0" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="84.0" layoutY="327.0" text="Heartrate for a warning" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="83.0" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="360.0" text="Minimum" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="36.0" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="360.0" text="Maximum" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="35.0" />
   </children>
 </AnchorPane>

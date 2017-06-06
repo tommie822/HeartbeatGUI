@@ -1,14 +1,19 @@
 package Controller;
 
-import Model.AbstractCrudDao;
-import Model.DaoImpl;
-import Model.DataPath;
+import Model.*;
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.IOException;
+import java.sql.Time;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
+
 
 public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao.DataClearedListener {
 

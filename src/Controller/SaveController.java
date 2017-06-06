@@ -11,6 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
 
 /**
  * Created by tom on 31-5-2017.
@@ -19,6 +21,8 @@ public class SaveController {
 
   @FXML
   private ListView<CheckBox> patientListView;
+  @FXML
+  private Button save;
 
   private DaoImpl dataDao = DataPath.dao;
 
@@ -57,20 +61,25 @@ public class SaveController {
     }catch (InterruptedException e){
       e.printStackTrace();
     }
-    Data data = new Data();
-    int index = 0;
-    int index2 = 0;
-    for(CheckBox checkBox : patientListView.getItems()){
-      if(checkBox.isSelected()){
-        int id = index;
-        String patientName = dataDao.getPatientName(index2);
-        Patient patient = new Patient(id, patientName);
-        patient.getHeartRateList().addAll(dataDao.getPatientHeartRateList(index2));
-        data.getPatients().add(patient);
-        index++;
+    if(!path.contains("nullnull")) {
+      Data data = new Data();
+      int index = 0;
+      int index2 = 0;
+      for (CheckBox checkBox : patientListView.getItems()) {
+        if (checkBox.isSelected()) {
+          int id = index;
+          String patientName = dataDao.getPatientName(index2);
+          Patient patient = new Patient(id, patientName);
+          patient.getHeartRateList().addAll(dataDao.getPatientHeartRateList(index2));
+          data.getPatients().add(patient);
+          index++;
+        }
+        index2++;
       }
-      index2++;
+      data.saveStateInto(path);
     }
-    data.saveStateInto(path);
+
+    Stage stage = (Stage) save.getScene().getWindow();
+    stage.close();
   }
 }

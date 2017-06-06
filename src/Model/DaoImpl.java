@@ -1,24 +1,13 @@
 package Model;
 
-import java.awt.Toolkit;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.StringTokenizer;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-/**
- * Created by tom on 11-5-2017.
- */
 public class DaoImpl extends AbstractCrudDao implements Dao {
 
   private Data data;
@@ -100,6 +89,15 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
     });
   }
 
+  public void deletePatient(int idWristband) {
+    newPatient(new CrudAction() {
+      @Override
+      public void doAction() {
+        data.getPatients().set(idWristband, new Patient(idWristband, ""));
+      }
+    });
+  }
+
   @Override
   public void clearPatients() {
     dataCleared(new CrudAction() {
@@ -156,7 +154,7 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
       }
 
       private void setDate(String stringDate) throws ParseException {
-        DateFormat timeFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
+        DateFormat timeFormat = new SimpleDateFormat("dd:MM:yyyy:HH:mm:ss");
         stringDate = stringDate.replace("!", "");
         date = timeFormat.parse(stringDate);
       }

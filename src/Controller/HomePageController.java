@@ -9,6 +9,8 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -34,6 +36,9 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import jfxtras.scene.control.LocalDateTimeTextField;
 
 public class HomePageController implements AbstractCrudDao.NewPatientListener,
     AbstractCrudDao.NewDataListener, CriticalStateListener {
@@ -50,6 +55,8 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
   private NumberAxis yAxis;
   @FXML
   private CategoryAxis xAxis;
+  @FXML
+  private LocalDateTimeTextField fromDateTime, tillDateTime;
 
   private DaoImpl dataDao = DataPath.dao;
 
@@ -155,14 +162,29 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
 
   @FXML
   private void showLineChart() {
+    String till = tillDateTime.getText();
+    String from = fromDateTime.getText();
+    DateFormat timeFormat2 = new SimpleDateFormat("dd-MMMMM-yyyy HH:mm:ss");
+    Date tillDate = new Date();
+    Date fromDate = new Date(2016,1,1,0,0,0);
+    try {
+      if(!till.equals("")) {
+        tillDate = timeFormat2.parse(till);     //TODO hehehehehejrhjdfhdjfhsjkdfhdkjsafhdskjfhdskajfhkjdshfikjus
+        fromDate = timeFormat2.parse(from);
+      }
+    }catch (Exception e){
+      e.printStackTrace();
+    }
     XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-    DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
+    DateFormat timeFormat = new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss");
     int selectedIdWristband = listViewNames.getSelectionModel().getSelectedIndex();
     if (!dataDao.getPatientHeartRateList(selectedIdWristband).isEmpty()) {
       heartRateLineChart.setTitle(dataDao.getPatientName(selectedIdWristband));
       for (HeartRate heartRate : dataDao.getPatientHeartRateList(selectedIdWristband)) {
-        series.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
-            heartRate.getHeartBeat()));
+        if(heartRate.getDate().after(fromDate) && heartRate.getDate().before(tillDate)) {
+          series.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
+              heartRate.getHeartBeat()));
+        }
       }
       heartRateLineChart.setAxisSortingPolicy(LineChart.SortingPolicy.X_AXIS);
       yAxis.setAutoRanging(true);

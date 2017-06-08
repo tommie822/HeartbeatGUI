@@ -1,46 +1,53 @@
-import Controller.RootController;
-import Model.VistaNavigator;
+import Model.DaoImpl;
+import Model.Data;
+import Model.DataPath;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+public class Main extends Application {
 
-/**
- * Created by Tom on 19-3-2017.
- * Stalin was here
- */
-public class Main extends Application{
-    public static void main(String[] args){
-        launch(args);
-    }
+  private Scene homePage;
+  private Data data = new Data();
 
-    /**Sets a new scene into the mainStage and makes it maximized*/
-    public void start(Stage mainStage) throws IOException{
-        Scene scene = new Scene(loadRootPane(), 1920, 1080);
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-        mainStage.setTitle("Heartbeat");
-        mainStage.setScene(scene);
-        mainStage.setMaximized(true);
-        mainStage.show();
-    }
+  public void start(Stage mainStage) throws IOException {
+    DataPath.data = data.loadStateFrom(DataPath.getLocalApplicationDataFolderPath());
+    DataPath.dao = new DaoImpl(DataPath.data);
+    setHomePage();
+    addStyleToHomePage();
+    initializeStage(mainStage);
+    mainStage.show();
+  }
 
-    /**Gets the fxml file of the rootPane. It also sets the rootcontroller in the vista navigator
-     * So that there is one class to coöridinate between all the different panes that can be inserted into the rootPane.
-     * It also calls the starting situation of the GUI by @VistaNavigator.setBasic()
-     * Afterwards it returns the rootPane so that it can be shown onto the mainstage*/
-    private Pane loadRootPane() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
+  private void setHomePage() throws IOException {
+    FXMLLoader loader = new FXMLLoader();
+    Pane homePageFXML = loader.load(getClass().getResourceAsStream("/View/HomePage.fxml"));
+    homePage = new Scene(homePageFXML, 1920, 1080);
+  }
 
-        Pane rootPane = loader.load(getClass().getResourceAsStream("/View/Root.fxml"));
+  private void addStyleToHomePage() {
+    homePage.getStylesheets().add(getClass().getClassLoader().getResource("Layout.css").toString());
+  }
 
-        RootController rootFrameController = loader.getController();
+  private void initializeStage(Stage mainStage) {
+    mainStage.setTitle("Heartbeat");
+    mainStage.setScene(homePage);
+    mainStage.setMaximized(true);
+    mainStage.getIcons().add(new Image(getClass().getResourceAsStream("Logo.png")));
+    mainStage.setAlwaysOnTop(false);
+  }
 
-        VistaNavigator.setRootFrameController(rootFrameController);
-        VistaNavigator.setBasic();
-
-        return rootPane;
-    }
+  public void stop() {
+    DataPath.data.saveStateInto(DataPath.getLocalApplicationDataFolderPath());
+    System.out.println("The system closed successfully");
+    System.exit(0);
+  }
 }

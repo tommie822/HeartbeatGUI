@@ -9,11 +9,8 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,7 +19,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -30,15 +26,16 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
 import jfxtras.scene.control.LocalDateTimeTextField;
+import javafx.scene.Node;
+
+
+import java.util.Calendar;
 
 public class HomePageController implements AbstractCrudDao.NewPatientListener,
     AbstractCrudDao.NewDataListener, CriticalStateListener {
@@ -166,12 +163,18 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
     String from = fromDateTime.getText();
     DateFormat timeFormat2 = new SimpleDateFormat("dd-MMMMM-yyyy HH:mm:ss");
     Date tillDate = new Date();
-    Date fromDate = new Date(2016,1,1,0,0,0);
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.YEAR, 2000);
+    Date fromDate = cal.getTime();
     try {
-      if(!till.equals("")) {
-        tillDate = timeFormat2.parse(till);     //TODO hehehehehejrhjdfhdjfhsjkdfhdkjsafhdskjfhdskajfhkjdshfikjus
-        fromDate = timeFormat2.parse(from);
-      }
+        if(!till.equals("")) {
+            tillDate = timeFormat2.parse(till);
+            System.out.println(tillDate);
+        }
+        if(!from.equals("")) {
+            fromDate = timeFormat2.parse(from);
+            System.out.println(fromDate);
+        }
     }catch (Exception e){
       e.printStackTrace();
     }
@@ -181,7 +184,9 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
     if (!dataDao.getPatientHeartRateList(selectedIdWristband).isEmpty()) {
       heartRateLineChart.setTitle(dataDao.getPatientName(selectedIdWristband));
       for (HeartRate heartRate : dataDao.getPatientHeartRateList(selectedIdWristband)) {
-        if(heartRate.getDate().after(fromDate) && heartRate.getDate().before(tillDate)) {
+        Date dateOfHeartrate = heartRate.getDate();
+        System.out.println(dateOfHeartrate);
+        if(dateOfHeartrate.after(fromDate) && dateOfHeartrate.before(tillDate)) {
           series.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
               heartRate.getHeartBeat()));
         }
@@ -196,14 +201,36 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
+          String till = tillDateTime.getText();
+          String from = fromDateTime.getText();
+          DateFormat timeFormat2 = new SimpleDateFormat("dd-MMMMM-yyyy HH:mm:ss");
+          Date tillDate = new Date();
+          Calendar cal = Calendar.getInstance();
+          cal.set(Calendar.YEAR, 2000);
+          Date fromDate = cal.getTime();
+          try {
+              if(!till.equals("")) {
+                  tillDate = timeFormat2.parse(till);
+                  System.out.println(tillDate);
+              }
+              if(!from.equals("")) {
+                  fromDate = timeFormat2.parse(from);
+                  System.out.println(fromDate);
+              }
+          }catch (Exception e){
+              e.printStackTrace();
+          }
         XYChart.Series<String, Integer> newSeries = new XYChart.Series<String, Integer>();
         DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
         int selectedWristbandID = listViewNames.getSelectionModel().getSelectedIndex();
         if (dataDao.patientHeartRateListIsNotEmpty(selectedWristbandID) && realTimeButton
             .isSelected()) {
           for (HeartRate heartRate : dataDao.getPatientHeartRateList(selectedWristbandID)) {
-            newSeries.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
-                heartRate.getHeartBeat()));
+              Date dateOfHeartrate = heartRate.getDate();
+              if(dateOfHeartrate.after(fromDate) && dateOfHeartrate.before(tillDate)) {
+                  newSeries.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
+                          heartRate.getHeartBeat()));
+              }
           }
           yAxis.setAutoRanging(true);
           heartRateLineChart.getData().add(newSeries);

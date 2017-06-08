@@ -8,70 +8,74 @@
 <body>
 Choose one of the following subjects
 <ul>
+  <li><a href="./helpEditor.html#General">General</a></li>
   <li><a href="./helpEditor.html#Connect">Connect</a></li>
   <li><a href="./helpEditor.html#Import">Import</a></li>
   <li><a href="./helpEditor.html#Editor">Editor</a></li>
   <li><a href="./helpEditor.html#Save">Save</a></li>
+  <li><a href="./helpEditor.html#Time_span_selector">Time span selector</a></li>
 </ul>
 <div>
+  <h2 id="General">General</h2>
+  <p>The program is designed to be user as users-friendly as possible. On the left side you can see in one overview all patients that are available to lookup.
+  When a patient is clicked and you can see their heartbeat data in a nice linechart. If you want to select specific dates to look up the patients data more closely.
+  You can use the <a href="./helpEditor.html#Time_span_selector">Time span selector</a>. If you want to change the names that are linked to the wristbands you can click on the <a href="./helpEditor.html#Editor">Editor</a>
+  in here you can change all the names and setup when an alarm must go of for each of the patients. If you are done measuring all the patients you can save the data by following this guide <a href="./helpEditor.html#Save">Save</a>.
+  Ofcourse you want to load the saved data, this can be done by using the <a href="./helpEditor.html#Import">Import</a> function. In here you can also import the data directly from the base station.
+  </p>
+</div>
+<div>
   <h2 id="Connect">Connect</h2>
-  <p>Clicking this button will give you a new screen. In here you can find a list of all devices. If
-    you want to connect to your standalone device, select "Arduino Uno".
-    When selected, you will need to click on the connect button and the window will automatically
-    close.
-  <p>To connect the standalone device you will need to connect it with the delivered USB-Cable. When
-    connected you will need to do the following steps:
+  <p>To connect the standalone device you will need to connect it with the delivered USB-Cable. After connecting follow the steps beneath.
   <ol>
     <li>Click on "Connect"</li>
     <li>Select "Arduino Uno"</li>
-    <li>Click on "Connect" but this time in the new window</li>
+    <li>Click on "Connect"</li>
   </ol>
-  You are now connected to the standalone device and new patient should pop up soon in the
-  patientlist. You should also be able to see real-time data of the patients.
-  If you are not seeing real-time data but still sees all the graphs from the patients. Be sure to
-  enable the real-time data by clicking on the real-time button.
+  You are now connected to the standalone device and new patient should pop up soon.
+  If you want to disable real-time data just toggle the button on the top of the linechart.
   </p>
 </div>
 <div>
   <h2 id="Import">Import</h2>
-  <p>On clicking this button you will get a new window where you can select a heartrate file that
-    you want to read out.</p>
-  <p>To use this function of the program you will need to do the following steps:
+  <p>To import new data in the program follow the following steps.
   <ol>
     <li>Click on "Import"</li>
-    <li>Find the .heartrate file you want to open.</li>
+    <li>Find the .heart or .txt file you want to open</li>
     <li>Click on "Open"</li>
   </ol>
-  If everything was done right you should now have imported all the data from the file.
+  You should now be able to see all the new data in the program.
   </p>
 </div>
 <div>
   <h2 id="Editor">Editor</h2>
-  <p>This function is to link names to every wristband-ID. So that you don't have to learn which
-    person has which ID-number.</p>
-  <p>To link names to each of the wristbands you need to do the following steps:
+  <p>To link names to each of the wristbands and select there warning trigger, follow these steps.
   <ol>
     <li>Click on "Editor"</li>
-    <li>Select the wristband-ID you want to link a name to</li>
-    <li>Now click on the right textfield and type in the name you want to give to that specific ID
-    </li>
-    <li>Do this for all the ID's you want to give a name</li>
-    <li>You can now close the editor</li>
+    <li>Select the wristband-ID you want to link a name too</li>
+    <li>Type the name of the patient in the appropriate textfield</li>
+    <li>Type in the minimum and maximum heartbeat of the patient</li>
+    <li>Close the editor</li>
   </ol>
-  You now have succesfully linked each ID to a name. You should now be able to see all the names in
-  the patientlist.
+  You now have succesfully linked each ID to a name. You should be able to see all the names in
+  the patientlist. Also when the patients heartbeat goes below or above the given limits the program will give a warning.
   </p>
 </div>
 <div>
   <h2 id="Save">Editor</h2>
-  <p>This function is to save all the users u want to save.</p>
-  <p>To save you need to do the following:
+  <p>To save you need to do the following.
   <ol>
     <li>Click on "Save"</li>
     <li>Select all users u want to save</li>
     <li>Click on "Save" and select a file where you want to save to</li>
   </ol>
   You now have succesfully saved the patients to a file.
+  </p>
+</div>
+<div>
+  <h2 id="Time_span_selector">Time span selector</h2>
+  <p>Select two dates where you want to know the values between. After selecting the dates click on reload linechart.
+  If no dates are selected the program will assume that there are no dates.</p>
   </p>
 </div>
 </body>

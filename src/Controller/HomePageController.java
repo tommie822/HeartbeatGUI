@@ -169,23 +169,20 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
     try {
         if(!till.equals("")) {
             tillDate = timeFormat2.parse(till);
-            System.out.println(tillDate);
         }
         if(!from.equals("")) {
             fromDate = timeFormat2.parse(from);
-            System.out.println(fromDate);
         }
     }catch (Exception e){
       e.printStackTrace();
     }
     XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-    DateFormat timeFormat = new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss");
+    DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
     int selectedIdWristband = listViewNames.getSelectionModel().getSelectedIndex();
     if (!dataDao.getPatientHeartRateList(selectedIdWristband).isEmpty()) {
       heartRateLineChart.setTitle(dataDao.getPatientName(selectedIdWristband));
       for (HeartRate heartRate : dataDao.getPatientHeartRateList(selectedIdWristband)) {
         Date dateOfHeartrate = heartRate.getDate();
-        System.out.println(dateOfHeartrate);
         if(dateOfHeartrate.after(fromDate) && dateOfHeartrate.before(tillDate)) {
           series.getData().add(new XYChart.Data<>(timeFormat.format(heartRate.getDate()),
               heartRate.getHeartBeat()));
@@ -211,11 +208,9 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
           try {
               if(!till.equals("")) {
                   tillDate = timeFormat2.parse(till);
-                  System.out.println(tillDate);
               }
               if(!from.equals("")) {
                   fromDate = timeFormat2.parse(from);
-                  System.out.println(fromDate);
               }
           }catch (Exception e){
               e.printStackTrace();

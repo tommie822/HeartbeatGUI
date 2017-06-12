@@ -150,7 +150,7 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
       }
 
       private void setHeartbeat(String stringHeartbeat) {
-        heartbeat = Integer.parseInt(stringHeartbeat);
+          heartbeat = Math.round(Float.parseFloat(stringHeartbeat));
       }
 
       private void setDate(String stringDate) throws ParseException {

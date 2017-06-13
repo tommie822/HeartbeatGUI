@@ -3,16 +3,11 @@ package Controller;
 import Model.*;
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.IOException;
-import java.sql.Time;
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Calendar;
-import java.text.SimpleDateFormat;
+import java.io.*;
 
 
 public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao.DataClearedListener {
@@ -39,6 +34,12 @@ public class ConnectionToSerialDeviceThread implements Runnable, AbstractCrudDao
         dataDao.clearPatients();
         waitUntilThisThreadIsOnlyThread();
         initializeSerialPort(serialPort);
+        try {
+          Thread.sleep(3000);
+          connectedSerialPort.getOutputStream().write('z');
+        }catch (Exception e){
+          e.printStackTrace();
+        }
         collectIncomingData();
         serialPort.closePort();
         System.out.println("Close thread");

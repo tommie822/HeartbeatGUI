@@ -260,7 +260,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
       @Override
       public void run() {
         Toolkit.getDefaultToolkit().beep();
-        Alert alert = new Alert(AlertType.WARNING, "Patient "+patientName+" with wristband: "+idWristband+" has probably some problems", ButtonType.CLOSE);
+        Alert alert = new Alert(AlertType.WARNING, "Patient "+patientName+" with wristband-id: "+idWristband+" has an irregular heartbeat!", ButtonType.CLOSE);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.setAlwaysOnTop(true);
         stage.toFront();

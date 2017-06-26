@@ -178,22 +178,26 @@ public class DaoImpl extends AbstractCrudDao implements Dao {
     StringTokenizer stringTokenizer = new StringTokenizer(dataString);
     if (stringTokenizer.countTokens() == 3) {
       int idWristband = Integer.parseInt(stringTokenizer.nextToken());
-      List<HeartRate> heartRateList = getPatientHeartRateList(idWristband);
-      int listSize = heartRateList.size();
-      int total = 0;
-      if (listSize > 5) {
-        for (int i = listSize - 5; i < listSize; i++) {
-          total = total + heartRateList.get(i).getHeartBeat();
-        }
-        int average = total / 5;
-        System.out.println(getPatient(idWristband).getMinumumHeartrate()+ "\t" + average + "\t" + getPatient(idWristband).getMaximumHeartrate() );
-        if (average < getPatient(idWristband).getMinumumHeartrate() || average > getPatient(idWristband).getMaximumHeartrate()) {
-          if(!getPatientIsCritical(idWristband)) {
-            setPatientIsCritical(idWristband, true);
+      if(getPatient(idWristband).warningEnabled) {
+        List<HeartRate> heartRateList = getPatientHeartRateList(idWristband);
+        int listSize = heartRateList.size();
+        int total = 0;
+        if (listSize > 5) {
+          for (int i = listSize - 5; i < listSize; i++) {
+            total = total + heartRateList.get(i).getHeartBeat();
           }
-        }else{
-          setPatientIsCritical(idWristband, false);
+          int average = total / 5;
+          System.out.println(getPatient(idWristband).getMinumumHeartrate() + "\t" + average + "\t" + getPatient(idWristband).getMaximumHeartrate());
+          if (average < getPatient(idWristband).getMinumumHeartrate() || average > getPatient(idWristband).getMaximumHeartrate()) {
+            if (!getPatientIsCritical(idWristband)) {
+              setPatientIsCritical(idWristband, true);
+            }
+          } else {
+            setPatientIsCritical(idWristband, false);
+          }
         }
+      }else {
+        setPatientIsCritical(idWristband, false);
       }
     }
   }

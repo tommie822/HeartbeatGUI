@@ -177,7 +177,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
       e.printStackTrace();
     }
     XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-    DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
+    DateFormat timeFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
     int selectedIdWristband = listViewNames.getSelectionModel().getSelectedIndex();
     if (!dataDao.getPatientHeartRateList(selectedIdWristband).isEmpty()) {
       heartRateLineChart.setTitle(dataDao.getPatientName(selectedIdWristband));
@@ -216,7 +216,7 @@ public class HomePageController implements AbstractCrudDao.NewPatientListener,
               e.printStackTrace();
           }
         XYChart.Series<String, Integer> newSeries = new XYChart.Series<String, Integer>();
-        DateFormat timeFormat = new SimpleDateFormat("MMM/dd HH:mm:ss");
+        DateFormat timeFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
         int selectedWristbandID = listViewNames.getSelectionModel().getSelectedIndex();
         if (dataDao.patientHeartRateListIsNotEmpty(selectedWristbandID) && realTimeButton
             .isSelected()) {

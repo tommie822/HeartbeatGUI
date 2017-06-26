@@ -41,19 +41,21 @@ public class SaveController {
   private String path;
   @FXML
   private void save() {
+    Stage stage = (Stage) save.getScene().getWindow();
     Thread thread = new Thread(new Runnable() {
       @Override
       public void run() {
         FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
+        dialog.setAlwaysOnTop(true);
         dialog.setMode(FileDialog.SAVE);
         dialog.setVisible(true);
-        dialog.setAlwaysOnTop(true);
         String fileName = dialog.getFile();
         String directoryName = dialog.getDirectory();
         path = directoryName + fileName + ".heart";
         System.out.println(path);
       }
     });
+    stage.hide();
     thread.setDaemon(true);
     thread.start();
     try {
@@ -79,7 +81,7 @@ public class SaveController {
       data.saveStateInto(path);
     }
 
-    Stage stage = (Stage) save.getScene().getWindow();
+
     stage.close();
   }
 }

@@ -18,5 +18,6 @@
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="84.0" layoutY="327.0" text="Heartrate for a warning" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="83.0" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="36.0" layoutY="360.0" text="Minimum" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="36.0" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="360.0" text="Maximum" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="35.0" />
+      <ToggleButton fx:id="enableWarnings" layoutX="108.0" layoutY="334.0" mnemonicParsing="false" onAction="#enableWarning" text="Enable warning" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="108.0" AnchorPane.rightAnchor="108.0" />
   </children>
 </AnchorPane>

@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Dao;
-import Model.DaoImpl;
 import Model.DataPath;
 import Model.Patient;
 import javafx.beans.value.ChangeListener;
@@ -11,11 +10,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 
 public class EditorController {
 
   @FXML
   private TextField nameInputField, maximumHeartRate, minimumHeartRate;
+  @FXML
+  private ToggleButton enableWarnings;
   @FXML
   private ListView<String> listViewID;
   private Dao dataDao = DataPath.dao;
@@ -26,7 +28,7 @@ public class EditorController {
    */
   public void initialize() {
     initializeListViewID();
-    initializeNameToNameInputField(0);
+    initializeNameToNameInputField(1);
     addListenerToListViewID();
     minimumHeartRate.setText(Integer.toString(dataDao.getPatient(listViewID.getSelectionModel().getSelectedIndex()).getMinumumHeartrate()));
     maximumHeartRate.setText(Integer.toString(dataDao.getPatient(listViewID.getSelectionModel().getSelectedIndex()).getMaximumHeartrate()));
@@ -46,6 +48,13 @@ public class EditorController {
         }
       }
     });
+    if(dataDao.getPatient(1).warningEnabled){
+      enableWarnings.setSelected(true);
+      enableWarnings.setText("Disable warning");
+    }else {
+      enableWarnings.setSelected(false);
+      enableWarnings.setText("Enable warning");
+    }
   }
 
   private void initializeListViewID() {
@@ -57,7 +66,7 @@ public class EditorController {
       patientIDs.set(dataDao.getPatientID(index), Integer.toString(dataDao.getPatientID(index)));
     }
     listViewID.getItems().addAll(patientIDs);
-    listViewID.getSelectionModel().select("0");
+    listViewID.getSelectionModel().select("1");
   }
 
   private void initializeNameToNameInputField(int idWristband) {
@@ -73,6 +82,13 @@ public class EditorController {
             initializeNameToNameInputField(newValue.intValue());
             minimumHeartRate.setText(Integer.toString(dataDao.getPatient(newValue.intValue()).getMinumumHeartrate()));
             maximumHeartRate.setText(Integer.toString(dataDao.getPatient(newValue.intValue()).getMaximumHeartrate()));
+            if(dataDao.getPatient(newValue.intValue()).warningEnabled){
+              enableWarnings.setSelected(true);
+              enableWarnings.setText("Disable warning");
+            }else {
+              enableWarnings.setSelected(false);
+              enableWarnings.setText("Enable warning");
+            }
           }
         });
   }
@@ -96,5 +112,17 @@ public class EditorController {
     int patientID = listViewID.getSelectionModel().getSelectedIndex();
     Patient patient = dataDao.getPatient(patientID);
     patient.setMaximumHeartrate(Integer.parseInt(maximumHeartRate.getText()));
+  }
+
+  public void enableWarning(){
+    int patientID = listViewID.getSelectionModel().getSelectedIndex();
+    Patient patient = dataDao.getPatient(patientID);
+    if(enableWarnings.isSelected()) {
+      patient.warningEnabled = true;
+      enableWarnings.setText("Disable warning");
+    }else {
+      patient.warningEnabled = false;
+      enableWarnings.setText("Enable warning");
+    }
   }
 }

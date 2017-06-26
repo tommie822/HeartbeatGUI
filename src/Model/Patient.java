@@ -10,6 +10,7 @@ public class Patient implements Serializable {
   private String name;
   private List<HeartRate> heartRateList = new ArrayList<HeartRate>();
   public boolean isCritical = false;
+  public boolean warningEnabled = false;
   private int minumumHeartrate = 25;
   private int maximumHeartrate = 150;
 
